@@ -1,0 +1,50 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/home/index",
+			"style": {
+				"navigationBarTitleText": "开福区雨洪监测预警指挥决策系统"
+			}
+		},
+		{
+			"path": "pages/event/details",
+			"style": {
+				"navigationBarTitleText": "事件详情"
+			}
+		},
+		{
+			"path": "pages/event/publishUrgent",
+			"style": {
+				"navigationBarTitleText": "事件发布"
+			}
+		},
+		{
+			"path": "pages/event/publishNormal",
+			"style": {
+				"navigationBarTitleText": "事件发布"
+			}
+		},
+		
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+			}
+		}
+	    ,{
+            "path" : "pages/home/copy/copy",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}
