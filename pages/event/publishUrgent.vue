@@ -48,7 +48,15 @@
 						<view class="value_wrap ">
 							<uni-forms-item name="textarea" label="图片/视频">
 								<view class="value_wrap">
-									<uni-file-picker v-model="formData.imageValue"></uni-file-picker>
+<!-- 									<u-upload
+										:fileList="fileList"
+										@afterRead="afterRead"
+										@delete="deletePic"
+										name="5"
+										multiple
+										:maxCount="3"
+									></u-upload> -->
+									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList"></uni-file-picker>
 								</view>
 							</uni-forms-item>
 						</view>
@@ -67,6 +75,7 @@
 	export default {
 		data() {
 			return {
+				fileList:[],
 				formData: {
 					name: '1',
 					time: '2',
@@ -75,6 +84,7 @@
 					textarea: '',
 					imageValue: [],
 				},
+				fileList:[],
 				rules: {
 					name: {
 						rules: [{
@@ -104,6 +114,12 @@
 			}
 		},
 		methods: {
+			selectFile(files){
+				console.log(files)
+				files.tempFilePaths.pop()
+				const file = files.tempFiles.pop();
+				this.fileList.push(file)				
+			},
 			bindTimeChange() {
 
 			},
@@ -113,12 +129,8 @@
 				}).catch(err => {
 					console.log('err', err);
 				})
+				console.log(this.fileList)
 				console.log(this.formData)
-				// var formdata = e.detail.value
-				// uni.showModal({
-				// 	content: '表单数据内容：' + JSON.stringify(formdata),
-				// 	showCancel: false
-				// });
 			},
 			formReset: function(e) {
 				console.log('清空数据')

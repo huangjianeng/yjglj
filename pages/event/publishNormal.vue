@@ -1,73 +1,64 @@
 <template>
 	<view class="wrap">
 		<view class="form_content">
-			<uni-forms ref="valiForm" :modelValue="formData" :rules="rules" label-position="top">
+			<uni-forms ref="valiForm" :modelValue="formData" :rules="rules" labelPosition="top" labelWidth="300">
 				<view class="area_form">
 					<view class="uni-form-item uni-column">
-<!-- 						<view class="title">
-							<text class="required">*</text>
-							事件名称
-						</view> -->
 						<view class="value_wrap">
 							<uni-forms-item name="name" label="事件名称" required>
 								<uni-easyinput :inputBorder="false" clearable v-model="formData.name"
 									placeholder="请输入事件名称"></uni-easyinput>
-								<!-- <uni-easyinput v-model="formData.name"  placeholder="请输入事件名称" ></uni-easyinput> -->
-								<!-- <input class="uni-input" v-model="formData.name" maxlength="20" placeholder="请输入事件名称" /> -->
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
-	<!-- 					<view class="title">
-							<text class="required">*</text>
-							发生时间
-						</view> -->
-						<view class="value_wrap">
-							<uni-forms-item name="time" label="事件名称" required>
+						<view class="value_wrap ">
+							<uni-forms-item name="time" label="发生时间" required>
 								<uni-datetime-picker v-model="formData.time" placeholder="请选择事件发生时间" />
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
-						<view class="title">
-							<text class="required">*</text>
-							详细地址
+						<view class="value_wrap ">
+							<uni-forms-item name="area" label="详细地址" required>
+								<uni-easyinput :inputBorder="false" clearable suffixIcon="location"
+									v-model="formData.area" placeholder="如区、街道、桥、路等" />
+							</uni-forms-item>
 						</view>
-						<uni-forms-item name="area" label="事件名称" required>
-							<uni-easyinput  :inputBorder="false" clearable suffixIcon="location" v-model="formData.area"
-								placeholder="如区、街道、桥、路等" />
-						</uni-forms-item>
 					</view>
 				</view>
 				<view class="area_form">
 					<view class="uni-form-item uni-column">
-						<view class="title">
-							<text class="required">*</text>
-							现场状况
-						</view>
-						<uni-forms-item name="content">
-							<uni-easyinput :placeholderStyl="placeholderStyl" style="height: 50px;" :inputBorder="false" clearable type="textarea"
-								v-model="formData.content" placeholder="请对现场基本状况进行描述" />
-							<!-- <textarea style="height: 50px;" v-model="formData.content" placeholder="" /> -->
-						</uni-forms-item>
-					</view>
-					<view class="uni-form-item uni-column">
-						<view class="title">
-							<!-- <text class="required">*</text> -->
-							主要工作目标/需求
-						</view>
-						<view class="uni-textarea value_wrap">
-							<uni-easyinput style="height: 50px;" :inputBorder="false" clearable type="textarea"
-								v-model="formData.textarea" placeholder="请输入工作目标/需求 1. 2. …" />
+						<view class="value_wrap ">
+							<uni-forms-item name="content" label="现场状况" required>
+								<uni-easyinput :inputBorder="false" clearable type="textarea" v-model="formData.content"
+									placeholder="请对现场基本状况进行描述" />
+							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
-						<view class="title">
-							<!-- <text class="required">*</text> -->
-							图片/视频
+						<view class="value_wrap ">
+							<uni-forms-item name="textarea" label="主要工作目标/需求">
+								<uni-easyinput :inputBorder="false" clearable type="textarea"
+									v-model="formData.textarea" placeholder="请输入工作目标/需求 1. 2. …" />
+							</uni-forms-item>
 						</view>
-						<view class="value_wrap">
-							<uni-file-picker v-model="formData.imageValue"></uni-file-picker>
+					</view>
+					<view class="uni-form-item uni-column">
+						<view class="value_wrap ">
+							<uni-forms-item name="textarea" label="图片/视频">
+								<view class="value_wrap">
+<!-- 									<u-upload
+										:fileList="fileList"
+										@afterRead="afterRead"
+										@delete="deletePic"
+										name="5"
+										multiple
+										:maxCount="3"
+									></u-upload> -->
+									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList"></uni-file-picker>
+								</view>
+							</uni-forms-item>
 						</view>
 					</view>
 				</view>
@@ -84,10 +75,7 @@
 	export default {
 		data() {
 			return {
-				placeholderStyl:{
-					color:'grey',
-					fontWeight:500,
-				},
+				fileList:[],
 				formData: {
 					name: '1',
 					time: '2',
@@ -96,6 +84,7 @@
 					textarea: '',
 					imageValue: [],
 				},
+				fileList:[],
 				rules: {
 					name: {
 						rules: [{
@@ -125,6 +114,12 @@
 			}
 		},
 		methods: {
+			selectFile(files){
+				console.log(files)
+				files.tempFilePaths.pop()
+				const file = files.tempFiles.pop();
+				this.fileList.push(file)				
+			},
 			bindTimeChange() {
 
 			},
@@ -134,12 +129,8 @@
 				}).catch(err => {
 					console.log('err', err);
 				})
+				console.log(this.fileList)
 				console.log(this.formData)
-				// var formdata = e.detail.value
-				// uni.showModal({
-				// 	content: '表单数据内容：' + JSON.stringify(formdata),
-				// 	showCancel: false
-				// });
 			},
 			formReset: function(e) {
 				console.log('清空数据')
@@ -175,9 +166,19 @@
 		color: red;
 	}
 
+	/deep/.uni-forms-item__label {
+		padding: 0;
+	}
+
+	/deep/.label-text span {
+		font-size: 16px !important;
+		font-weight: 600;
+		color: #1D2732;
+	}
+
 	.value_wrap {
 		font-size: 13px;
-		padding: 6px 0 10px;
+		// padding: 6px 0 10px;
 		// border-bottom: 1px solid #E4E9EE;
 		// margin-bottom: 4px;
 	}
@@ -195,10 +196,9 @@
 		border-radius: 9px;
 	}
 
-	.uni-textarea-placeholder {
-		font-weight: 500;
-	}
-
+	// /deep/.is-input-border{
+	// 	border: none;
+	// }
 	/deep/.is-input-error-border .uni-easyinput__placeholder-class {
 		color: grey;
 	}
@@ -207,9 +207,14 @@
 		padding-left: 0px !important;
 	}
 
+	/deep/.uni-easyinput__content-textarea {
+		min-height: 42px;
+		height: 42px;
+	}
+
 	/deep/.uni-forms-item__inner {
-		// border-bottom: 1px solid #E4E9EE;
-		// padding-bottom: 4px;
+		border-bottom: 1px solid #E4E9EE;
+		padding-bottom: 8px;
 	}
 
 	/deep/.uni-date__x-input {
