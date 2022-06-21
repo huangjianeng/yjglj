@@ -33,12 +33,17 @@
 					<image src="../../static/logo.png"></image>
 				</view>
 			</view>
+			<Comment></Comment>
 		</view>
 	</view>
 </template>
 
 <script>
+	import Comment from "./comment"
 	export default {
+		components:{
+			Comment
+		},
 		data() {
 			return {
 				title: 'Hello',
@@ -164,6 +169,7 @@
 		background-color: #FFFFFF;
 		justify-content: space-between;
 		padding: 10px;
+		border-radius: 10px;
 	}
 
 	.img_list .img_wrap {
