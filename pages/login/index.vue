@@ -15,14 +15,14 @@
 					</view>
 					<view class="uni-form-item uni-column">
 						<uni-forms-item name="password" required>
-							<uni-easyinput :inputBorder="false" clearable v-model="formData.password"
+							<uni-easyinput type="password" :inputBorder="false" clearable v-model="formData.password"
 								placeholder="请输入密码" />
 						</uni-forms-item>
 						<!-- suffixIcon="eye" -->
 					</view>
 				</view>
 				<view class="uni-btn-v">
-					<button @click="formSubmit">立即登陆</button>
+					<button @click="formSubmit">立即登录</button>
 				</view>
 			</uni-forms>
 		</view>

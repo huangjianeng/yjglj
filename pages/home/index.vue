@@ -330,7 +330,6 @@
 		height: 36px;
 		background: #EFF3F7;
 		border-radius: 4px;
-
 		font-size: 15px;
 		font-weight: 400;
 		color: #4E5E72;
