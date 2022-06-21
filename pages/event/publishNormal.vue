@@ -4,10 +4,28 @@
 			<uni-forms ref="valiForm" :modelValue="formData" :rules="rules" labelPosition="top" labelWidth="300">
 				<view class="area_form">
 					<view class="uni-form-item uni-column">
-						<view class="value_wrap">
-							<uni-forms-item name="name" label="事件名称" required>
-								<uni-easyinput :inputBorder="false" clearable v-model="formData.name"
-									placeholder="请输入事件名称"></uni-easyinput>
+						<view class="value_wrap ">
+							<uni-forms-item name="content" label="事件内容" required>
+								<uni-easyinput :inputBorder="false" clearable type="textarea" v-model="formData.content"
+									placeholder="请对现场基本状况进行描述" />
+							</uni-forms-item>
+						</view>
+					</view>
+					<view class="uni-form-item uni-column">
+						<view class="value_wrap ">
+							<uni-forms-item name="textarea" label="图片/视频">
+								<view class="value_wrap">
+									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList">
+									</uni-file-picker>
+								</view>
+							</uni-forms-item>
+						</view>
+					</view>
+					<view class="uni-form-item uni-column">
+						<view class="value_wrap ">
+							<uni-forms-item name="textarea" label="处理情况">
+								<uni-easyinput :inputBorder="false" clearable type="textarea"
+									v-model="formData.textarea" placeholder="请输入目前处理的情况" />
 							</uni-forms-item>
 						</view>
 					</view>
@@ -27,41 +45,6 @@
 						</view>
 					</view>
 				</view>
-				<view class="area_form">
-					<view class="uni-form-item uni-column">
-						<view class="value_wrap ">
-							<uni-forms-item name="content" label="现场状况" required>
-								<uni-easyinput :inputBorder="false" clearable type="textarea" v-model="formData.content"
-									placeholder="请对现场基本状况进行描述" />
-							</uni-forms-item>
-						</view>
-					</view>
-					<view class="uni-form-item uni-column">
-						<view class="value_wrap ">
-							<uni-forms-item name="textarea" label="主要工作目标/需求">
-								<uni-easyinput :inputBorder="false" clearable type="textarea"
-									v-model="formData.textarea" placeholder="请输入工作目标/需求 1. 2. …" />
-							</uni-forms-item>
-						</view>
-					</view>
-					<view class="uni-form-item uni-column">
-						<view class="value_wrap ">
-							<uni-forms-item name="textarea" label="图片/视频">
-								<view class="value_wrap">
-<!-- 									<u-upload
-										:fileList="fileList"
-										@afterRead="afterRead"
-										@delete="deletePic"
-										name="5"
-										multiple
-										:maxCount="3"
-									></u-upload> -->
-									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList"></uni-file-picker>
-								</view>
-							</uni-forms-item>
-						</view>
-					</view>
-				</view>
 				<view class="uni-btn-v">
 					<button @click="formSubmit">发布事件</button>
 				</view>
@@ -75,7 +58,7 @@
 	export default {
 		data() {
 			return {
-				fileList:[],
+				fileList: [],
 				formData: {
 					name: '1',
 					time: '2',
@@ -84,7 +67,7 @@
 					textarea: '',
 					imageValue: [],
 				},
-				fileList:[],
+				fileList: [],
 				rules: {
 					name: {
 						rules: [{
@@ -114,11 +97,11 @@
 			}
 		},
 		methods: {
-			selectFile(files){
+			selectFile(files) {
 				console.log(files)
 				files.tempFilePaths.pop()
 				const file = files.tempFiles.pop();
-				this.fileList.push(file)				
+				this.fileList.push(file)
 			},
 			bindTimeChange() {
 
@@ -210,6 +193,12 @@
 	/deep/.uni-easyinput__content-textarea {
 		min-height: 42px;
 		height: 42px;
+	}
+
+	/deep/.uni-easyinput__placeholder-class {
+		font-size: 13px;
+		font-weight: 500;
+		color: grey;
 	}
 
 	/deep/.uni-forms-item__inner {

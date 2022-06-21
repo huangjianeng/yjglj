@@ -48,7 +48,7 @@
 						<view class="value_wrap ">
 							<uni-forms-item name="textarea" label="图片/视频">
 								<view class="value_wrap">
-<!-- 									<u-upload
+									<!-- 									<u-upload
 										:fileList="fileList"
 										@afterRead="afterRead"
 										@delete="deletePic"
@@ -56,7 +56,8 @@
 										multiple
 										:maxCount="3"
 									></u-upload> -->
-									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList"></uni-file-picker>
+									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList">
+									</uni-file-picker>
 								</view>
 							</uni-forms-item>
 						</view>
@@ -75,7 +76,7 @@
 	export default {
 		data() {
 			return {
-				fileList:[],
+				fileList: [],
 				formData: {
 					name: '1',
 					time: '2',
@@ -84,7 +85,7 @@
 					textarea: '',
 					imageValue: [],
 				},
-				fileList:[],
+				fileList: [],
 				rules: {
 					name: {
 						rules: [{
@@ -114,11 +115,11 @@
 			}
 		},
 		methods: {
-			selectFile(files){
+			selectFile(files) {
 				console.log(files)
 				files.tempFilePaths.pop()
 				const file = files.tempFiles.pop();
-				this.fileList.push(file)				
+				this.fileList.push(file)
 			},
 			bindTimeChange() {
 
@@ -210,6 +211,12 @@
 	/deep/.uni-easyinput__content-textarea {
 		min-height: 42px;
 		height: 42px;
+	}
+
+	/deep/.uni-easyinput__placeholder-class {
+		font-size: 13px;
+		font-weight: 500;
+		color: grey;
 	}
 
 	/deep/.uni-forms-item__inner {

@@ -4,7 +4,7 @@
 			<view class="header">
 				<view @click="showDrawer('showLeft')" class="user font24">Hello！张斌宇<span class="font12">></span></view>
 				<view class="mes_box">
-					<image src="@/static/message.png"></image>
+					<image @click="gotoMessage" src="@/static/message.png"></image>
 				</view>
 			</view>
 			<view class="event_enter">
@@ -19,27 +19,29 @@
 					<image src="@/static/cgsj.png" />
 				</view>
 			</view>
-			<view class="news_head">应急事件</view>
-			<view class="news_item" @click="gotoDetails" v-for="(v,i) in list" :key="i">
-				<view class="height22">
-					<view>{{v.title}}</view>
-					<view class="level"></view>
-				</view>
-				<view class="height22">
-					<image src="@/static/time.png"></image>{{v.time}}
-				</view>
-				<view class="height22">
-					<image src="@/static/site.png"></image> {{v.site}}
-				</view>
-				<view class="img_list">
-					<view class="img_wrap">
-						<image src="../../static/logo.png"></image>
+			<view class="news_wrap">
+				<view class="news_head">应急事件</view>
+				<view class="news_item" @click="gotoDetails" v-for="(v,i) in list" :key="i">
+					<view class="height22">
+						<view>{{v.title}}</view>
+						<view class="level"></view>
 					</view>
-					<view class="img_wrap">
-						<image src="../../static/logo.png"></image>
+					<view class="height22">
+						<image src="@/static/time.png"></image>{{v.time}}
 					</view>
-					<view class="img_wrap">
-						<image src="../../static/logo.png"></image>
+					<view class="height22">
+						<image src="@/static/site.png"></image> {{v.site}}
+					</view>
+					<view class="img_list">
+						<view class="img_wrap">
+							<image src="../../static/logo.png"></image>
+						</view>
+						<view class="img_wrap">
+							<image src="../../static/logo.png"></image>
+						</view>
+						<view class="img_wrap">
+							<image src="../../static/logo.png"></image>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -47,18 +49,20 @@
 
 		<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
 			<view class="example-body">
-				<view class="user_sidebar">Hello！张斌宇</view>
-				<view class="height60">
-					<view>消息中心</view>
-					<view>></view>
+				<view>
+					<view class="user_sidebar">Hello！张斌宇</view>
+					<view class="height60" @click="gotoMessage">
+						<view>消息中心</view>
+						<view>></view>
+					</view>
+					<view class="height60" @click="gotoMyPublish">
+						<view>我发布的事件</view>
+						<view>></view>
+					</view>
 				</view>
-				<view class="height60">
-					<view>我发布的事件</view>
-					<view>></view>
+				<view class="close">
+					<button @click="logout">退出登录</button>
 				</view>
-				<!-- 					<view class="close">
-								<button @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭Drawer</text></button>
-							</view> -->
 			</view>
 		</uni-drawer>
 		<!-- 		<uni-section title="左侧弹出" type="line">
@@ -98,13 +102,29 @@
 
 		},
 		methods: {
+			logout() {
+				this.$refs.showLeft.close()
+				uni.navigateTo({
+					url: '/pages/login/index'
+				})
+			},
+			gotoMyPublish() {
+				uni.navigateTo({
+					url: '/pages/event/myPublish',
+				});
+			},
+			gotoMessage() {
+				uni.navigateTo({
+					url: '/pages/my/message',
+				});
+			},
 			eventPulish(type) {
 				console.log(type)
-				if(type == 1){
+				if (type == 1) {
 					uni.navigateTo({
 						url: '/pages/event/publishUrgent',
 					});
-				}else{
+				} else {
 					uni.navigateTo({
 						url: '/pages/event/publishNormal',
 					});
@@ -224,6 +244,10 @@
 		background-color: #EEF2F6;
 	}
 
+	.news_wrap {
+		padding-bottom: 2px;
+	}
+
 	.news_head {
 		margin: 10px 0;
 		font-size: 20px;
@@ -290,7 +314,30 @@
 
 	.example-body {
 		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 		// padding: 20px;
+	}
+
+	.close {
+		margin: 30px;
+	}
+
+	/deep/.close button {
+		width: 132px;
+		height: 36px;
+		background: #EFF3F7;
+		border-radius: 4px;
+
+		font-size: 15px;
+		font-weight: 400;
+		color: #4E5E72;
+	}
+
+	/deep/.close button::after {
+		border: none;
 	}
 
 	.user_sidebar {
