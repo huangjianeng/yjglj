@@ -26,7 +26,7 @@ export async function addNormalEvent(data){
 	// console.log(uni.getStorageSync('userinfo').access_token)
     return await new Promise((r) => {
         uni.request({
-            method: "POST",
+            method: "GET",
             url: `${config.apiUrl2}/api/NormalEvent/insertNormalEvent`,
             data,
             header: {

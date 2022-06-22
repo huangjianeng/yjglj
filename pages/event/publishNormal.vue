@@ -13,7 +13,7 @@
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item  label="图片/视频">
+							<uni-forms-item label="图片/视频">
 								<view class="value_wrap">
 									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList">
 									</uni-file-picker>
@@ -24,15 +24,16 @@
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
 							<uni-forms-item name="state" label="处理情况">
-								<uni-easyinput :inputBorder="false" clearable type="state"
-									v-model="formData.state" placeholder="请输入目前处理的情况" />
+								<uni-easyinput :inputBorder="false" clearable type="state" v-model="formData.state"
+									placeholder="请输入目前处理的情况" />
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
 							<uni-forms-item name="timestamp" label="发生时间" required>
-								<uni-datetime-picker returnType="timestamp" v-model="formData.timestamp" placeholder="请选择事件发生时间" />
+								<uni-datetime-picker returnType="timestamp" v-model="formData.timestamp"
+									placeholder="请选择事件发生时间" />
 							</uni-forms-item>
 						</view>
 					</view>
@@ -111,7 +112,12 @@
 				this.$refs['valiForm'].validate().then(res => {
 					// let objectid = Math.round(Math.random()*1000000)
 					// let obj = {eventId:2,objectid}
-					addNormalEvent({...this.formData}).then(res=>{
+					let params = {
+						entity: this.formData,
+						x:21,
+						y:123
+					}
+					addNormalEvent().then(res => {
 						console.log(res)
 					})
 					console.log('success', res);
