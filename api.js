@@ -18,14 +18,16 @@ export async function loginApi(data){
     });
 }
 
+
+// http://175.6.136.216:8092/api/NormalEvent/insertNormalEvent?eventID=2&entity={}&x=112&y=28
 // 新增常规事件
 export async function addNormalEvent(data){
-	console.log(uni.getStorageSync('userinfo'))
-	console.log(uni.getStorageSync('userinfo').access_token)
+	// console.log(uni.getStorageSync('userinfo'))
+	// console.log(uni.getStorageSync('userinfo').access_token)
     return await new Promise((r) => {
         uni.request({
             method: "POST",
-            url: `${config.apiUrl}/sde/normalEvent/save`,
+            url: `${config.apiUrl2}/api/NormalEvent/insertNormalEvent`,
             data,
             header: {
                 'Blade-Auth': uni.getStorageSync('userinfo').access_token

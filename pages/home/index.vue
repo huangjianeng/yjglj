@@ -22,21 +22,30 @@
 			<view class="news_wrap">
 				<view class="news_head">应急事件</view>
 				<view class="news_item" @click="gotoDetails" v-for="(v,i) in list" :key="i">
-					<view class="height22">
-						<view>{{v.title}}</view>
-						<view class="level"></view>
+					<view class="height22" style="justify-content: space-between;">
+						<view>{{v.sjmc}}</view>
+						<!-- <view class="level"></view> -->
+						<view class="level" v-if="v.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
+						</view>
+						<view class="level" v-else-if="v.sjdj == 'B'"
+							style="background: url('../../static/B级@2x.png')">
+							B级</view>
+						<view class="level" v-else-if="v.sjdj == 'C'"
+							style="background: url('../../static/C级@2x.png')">
+							C级</view>
+						<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
 					</view>
 					<view class="height22">
-						<uni-dateformat :date="v.time"></uni-dateformat>
+						<uni-dateformat :date="v.cjsj"></uni-dateformat>
 					</view>
 					<view class="height22">
-						<image src="@/static/site.png"></image> {{v.site}}
+						<image src="@/static/site.png"></image> {{v.sjwz}}
 					</view>
 					<view class="img_list">
 <!-- 					<view class="img_wrap">
 							<image src="../../static/logo.png"></image>
 						</view> -->
-						<view class="img_wrap" v-for="(val,index) in v.attrIds" :key="index">
+						<view class="img_wrap" v-for="(val,index) in v.attIds" :key="index">
 							<image :src="getImg(val)"></image>
 						</view>
 					</view>
@@ -158,8 +167,8 @@
 				console.log((type === 'showLeft' ? '左窗口' : '右窗口') + (e ? '打开' : '关闭'));
 				this[type] = e
 			},
-			getImg(v) {
-				return config.apiUrl + '/business/attach/view/' + v.id
+			getImg(id) {
+				return config.apiUrl + '/business/attach/view/' + id
 			}
 		},
 		onNavigationBarButtonTap(e) {
@@ -272,7 +281,15 @@
 		margin-bottom: 10px;
 	}
 
-	.level {}
+	.level {
+		width: 40px;
+		height: 18px;
+		line-height: 20px;
+		border-radius: 2px;
+		text-align: center;
+		color: #FFFFFF;
+		font-size: 13;
+	}
 
 	.news_item image {
 		width: 14px;
