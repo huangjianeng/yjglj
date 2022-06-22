@@ -12,10 +12,10 @@
 					<view class="level"></view>
 				</view>
 				<view class="height22">
-					<image src="@/static/time.png"></image>{{v.time}}
+					<image src="@/static/time.png"></image>{{v.timestamp}}
 				</view>
 				<view class="height22">
-					<image src="@/static/site.png"></image> {{v.site}}
+					<image src="@/static/site.png"></image> {{v.addr}}
 				</view>
 				<view class="img_list">
 					<view class="img_wrap">
@@ -34,6 +34,9 @@
 </template>
 
 <script>
+	import {
+		getNormalEventList
+	} from '@/api'
 	export default {
 		data() {
 			return {
@@ -67,7 +70,19 @@
 		methods: {
 			tabChange(i) {
 				this.active = i
-				this.list = this.list.concat(this.list)
+				let obj = {
+					eventId: 2,
+					// ...this.
+				}
+				getNormalEventList(obj).then(res => {
+					let [a, data] = res
+					console.log(data.data.code)
+					if (data.data.code == 200) {
+						this.list = data.data.data.records
+					}
+					console.log(this.list)
+				})
+				// this.list = this.list.concat(this.list)
 			}
 		}
 	}
@@ -130,6 +145,7 @@
 		flex-shrink: 0;
 		margin-right: 10px;
 	}
+
 	.list_item image {
 		width: 14px;
 		height: 14px;
@@ -157,6 +173,7 @@
 		left: 0;
 		top: 0;
 	}
+
 	.height22 {
 		height: 22px;
 		display: flex;

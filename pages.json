@@ -48,14 +48,6 @@
 				"navigationBarTitleText": "uni-app"
 			}
 		}
-	    // ,{
-     //        "path" : "pages/home/copy/copy",
-     //        "style" :                                                                                    
-     //        {
-     //            "navigationBarTitleText": "",
-     //            "enablePullDownRefresh": false
-     //        }
-     //    }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

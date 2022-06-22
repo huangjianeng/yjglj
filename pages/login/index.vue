@@ -8,8 +8,8 @@
 			<uni-forms ref="valiForm" :modelValue="formData" :rules="rules">
 				<view class="area_form">
 					<view class="uni-form-item uni-column">
-						<uni-forms-item name="name" required>
-							<uni-easyinput :inputBorder="false" clearable v-model="formData.name"
+						<uni-forms-item name="username" required>
+							<uni-easyinput :inputBorder="false" clearable v-model="formData.username"
 								placeholder="请输入登录账号" />
 						</uni-forms-item>
 					</view>
@@ -30,16 +30,19 @@
 </template>
 
 <script>
+	import {
+		loginApi
+	} from '@/api'
 	export default {
 		data() {
 			return {
 				title: 'Hello',
 				formData: {
-					name: '1',
-					password: '',
+					username: '1001',
+					password: '123456',
 				},
 				rules: {
-					name: {
+					username: {
 						rules: [{
 							required: true,
 							errorMessage: '不能为空'
@@ -60,9 +63,16 @@
 		methods: {
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {
-					uni.navigateTo({
-						url:'/pages/home/index'
+					let obj = {...this.formData,grantType:'password'}
+					loginApi(obj).then(res=>{
+						// console.log(res)
+						uni.setStorageSync('userinfo', res)
+						// uni.setStorageSync('loginTime', Date.now())
+						uni.navigateTo({
+							url:'/pages/home/index'
+						})
 					})
+			
 					console.log('success', res);
 				}).catch(err => {
 					console.log('err', err);

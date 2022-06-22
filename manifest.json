@@ -6,6 +6,26 @@
     "versionCode" : "100",
     "transformPx" : false,
     /* 5+App特有相关 */
+    "h5" : {
+        "router" : {
+            "mode" : "hash"
+        },
+        "devServer" : {
+            "port" : 8080,
+            "disableHostCheck" : true,
+            "proxy" : {
+                "/api" : {
+                    "target" : "http://175.6.177.203:8082", //请求的目标域名
+                    "changeOrigin" : true,
+                    "secure" : false,
+                    "pathRewrite" : {
+                        //使用代理； 告诉他你这个连接要用代理
+                        "/api" : ""
+                    }
+                }
+            }
+        }
+    },
     "app-plus" : {
         "usingComponents" : true,
         "nvueStyleCompiler" : "uni-app",

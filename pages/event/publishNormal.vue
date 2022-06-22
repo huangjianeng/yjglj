@@ -13,7 +13,7 @@
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="textarea" label="图片/视频">
+							<uni-forms-item  label="图片/视频">
 								<view class="value_wrap">
 									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList">
 									</uni-file-picker>
@@ -23,24 +23,24 @@
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="textarea" label="处理情况">
-								<uni-easyinput :inputBorder="false" clearable type="textarea"
-									v-model="formData.textarea" placeholder="请输入目前处理的情况" />
+							<uni-forms-item name="state" label="处理情况">
+								<uni-easyinput :inputBorder="false" clearable type="state"
+									v-model="formData.state" placeholder="请输入目前处理的情况" />
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="time" label="发生时间" required>
-								<uni-datetime-picker v-model="formData.time" placeholder="请选择事件发生时间" />
+							<uni-forms-item name="timestamp" label="发生时间" required>
+								<uni-datetime-picker returnType="timestamp" v-model="formData.timestamp" placeholder="请选择事件发生时间" />
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="area" label="详细地址" required>
+							<uni-forms-item name="addr" label="详细地址" required>
 								<uni-easyinput :inputBorder="false" clearable suffixIcon="location"
-									v-model="formData.area" placeholder="如区、街道、桥、路等" />
+									v-model="formData.addr" placeholder="如区、街道、桥、路等" />
 							</uni-forms-item>
 						</view>
 					</view>
@@ -55,33 +55,34 @@
 </template>
 
 <script>
+	import {
+		addNormalEvent
+	} from '@/api'
 	export default {
 		data() {
 			return {
 				fileList: [],
 				formData: {
-					name: '1',
-					time: '2',
-					area: '3',
-					content: '4',
-					textarea: '',
-					imageValue: [],
+					state: '',
+					timestamp: '',
+					addr: '雨花区长沙市左家塘',
+					content: '常规事件123',
+					// imageValue: [],
 				},
-				fileList: [],
 				rules: {
-					name: {
+					// state: {
+					// 	rules: [{
+					// 		required: true,
+					// 		errorMessage: '不能为空'
+					// 	}]
+					// },
+					timestamp: {
 						rules: [{
 							required: true,
 							errorMessage: '不能为空'
 						}]
 					},
-					time: {
-						rules: [{
-							required: true,
-							errorMessage: '不能为空'
-						}]
-					},
-					area: {
+					addr: {
 						rules: [{
 							required: true,
 							errorMessage: '不能为空'
@@ -108,6 +109,11 @@
 			},
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {
+					let objectid = Math.round(Math.random()*1000000)
+					let obj = {eventId:2,objectid}
+					addNormalEvent({...obj,...this.formData}).then(res=>{
+						console.log(res)
+					})
 					console.log('success', res);
 				}).catch(err => {
 					console.log('err', err);
