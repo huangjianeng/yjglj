@@ -56,7 +56,7 @@
 						<view>></view>
 					</view>
 					<view class="height60" @click="gotoMyPublish">
-						<view>我发布的事件</view>
+						<view>我参与的事件</view>
 						<view>></view>
 					</view>
 				</view>
@@ -73,35 +73,45 @@
 </template>
 
 <script>
+	import {
+		getUrgentEventList
+	} from "@/api.js"
 	export default {
 		data() {
 			return {
 				title: 'Hello',
-				list: [{
-						title: '浏阳河隧道积水3人被困车顶',
-						time: '2022-05-12 10:12备份',
-						site: '浏阳河隧道南往北方向隧道内距离出口100',
-						img: [1, 2, 3]
-					},
-					{
-						title: '浏阳河隧道积水3人被困车顶',
-						time: '2022-05-12 10:12备份',
-						site: '浏阳河隧道南往北方向隧道内距离出口100',
-						img: [1, 2, 3]
-					},
-					{
-						title: '浏阳河隧道积水3人被困车顶',
-						time: '2022-05-12 10:12备份',
-						site: '浏阳河隧道南往北方向隧道内距离出口100',
-						img: [1, 2, 3]
-					}
-				]
+				list: [],
+				pageParams: {
+					current: 1,
+					size: 10,
+				},
+				totalPage: 99,
+			}
+		},
+		onReachBottom() {
+			this.pageParams.current++;
+			if (this.pageParams.current > this.totalPage) {
+				uni.hideNavigationBarLoading();
+				uni.showToast({
+					title: '暂无更多数据'
+				})
+			} else {
+				this.init();
 			}
 		},
 		onLoad() {
-
+			this.init()
 		},
 		methods: {
+			init(){
+				getUrgentEventList(this.pageParams).then(res => {
+					console.log(res)
+					if (res.code === 200) {
+						this.list.push(...res.data.records)
+						this.totalPage = res.data.pages
+					}
+				})
+			},
 			logout() {
 				this.$refs.showLeft.close()
 				uni.navigateTo({

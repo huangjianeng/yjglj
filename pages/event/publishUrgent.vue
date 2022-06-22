@@ -5,24 +5,24 @@
 				<view class="area_form">
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap">
-							<uni-forms-item name="name" label="事件名称" required>
-								<uni-easyinput :inputBorder="false" clearable v-model="formData.name"
+							<uni-forms-item name="sjmc" label="事件名称" required>
+								<uni-easyinput :inputBorder="false" clearable v-model="formData.sjmc"
 									placeholder="请输入事件名称"></uni-easyinput>
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="time" label="发生时间" required>
-								<uni-datetime-picker v-model="formData.time" placeholder="请选择事件发生时间" />
+							<uni-forms-item name="bgsj" label="发生时间" required>
+								<uni-datetime-picker v-model="formData.bgsj" placeholder="请选择事件发生时间" />
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="area" label="详细地址" required>
+							<uni-forms-item name="sjwz" label="详细地址" required>
 								<uni-easyinput :inputBorder="false" clearable suffixIcon="location"
-									v-model="formData.area" placeholder="如区、街道、桥、路等" />
+									v-model="formData.sjwz" placeholder="如区、街道、桥、路等" />
 							</uni-forms-item>
 						</view>
 					</view>
@@ -30,33 +30,26 @@
 				<view class="area_form">
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="content" label="现场状况" required>
-								<uni-easyinput :inputBorder="false" clearable type="textarea" v-model="formData.content"
+							<uni-forms-item name="xcqk" label="现场状况" required>
+								<uni-easyinput :inputBorder="false" clearable type="textarea" v-model="formData.xcqk"
 									placeholder="请对现场基本状况进行描述" />
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="textarea" label="主要工作目标/需求">
-								<uni-easyinput :inputBorder="false" clearable type="textarea"
-									v-model="formData.textarea" placeholder="请输入工作目标/需求 1. 2. …" />
+							<uni-forms-item name="gzyq" label="主要工作目标/需求">
+								<uni-easyinput :inputBorder="false" clearable type="textarea" v-model="formData.gzyq"
+									placeholder="请输入工作目标/需求 1. 2. …" />
 							</uni-forms-item>
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
-							<uni-forms-item name="textarea" label="图片/视频">
+							<uni-forms-item label="图片/视频">
 								<view class="value_wrap">
-									<!-- 									<u-upload
-										:fileList="fileList"
-										@afterRead="afterRead"
-										@delete="deletePic"
-										name="5"
-										multiple
-										:maxCount="3"
-									></u-upload> -->
-									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList">
+									<uni-file-picker :auto-upload="false" @select="selectFile" @delete="deleteFile"
+										v-model="fileList">
 									</uni-file-picker>
 								</view>
 							</uni-forms-item>
@@ -67,45 +60,53 @@
 					<button @click="formSubmit">发布事件</button>
 				</view>
 			</uni-forms>
-
+			<!-- <u-toast ref="uToast"></u-toast> -->
 		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		addUrgentEvent,
+		fileUpload
+	} from "@/api.js"
+	import config from '@/config.js'
 	export default {
 		data() {
 			return {
 				fileList: [],
 				formData: {
-					name: '1',
-					time: '2',
-					area: '3',
-					content: '4',
-					textarea: '',
-					imageValue: [],
+					sjmc: '1',
+					bgsj: new Date().getTime(), // 报告时间
+					xcqk: '', //现场状况
+					gzyq: '', // 工作目标
+					attIds: [],
+					sjwz: '', // 事件地点
+					sjdj: 'D', // 事件等级
+					sjzt: '预发布',
+					// xy:''
 				},
-				fileList: [],
+				fileList2: [],
 				rules: {
-					name: {
+					sjmc: {
 						rules: [{
 							required: true,
 							errorMessage: '不能为空'
 						}]
 					},
-					time: {
+					bgsj: {
 						rules: [{
 							required: true,
 							errorMessage: '不能为空'
 						}]
 					},
-					area: {
+					sjwz: {
 						rules: [{
 							required: true,
 							errorMessage: '不能为空'
 						}]
 					},
-					content: {
+					xcqk: {
 						rules: [{
 							required: true,
 							errorMessage: '不能为空'
@@ -115,17 +116,68 @@
 			}
 		},
 		methods: {
+			deleteFile(files) {
+				let index = this.fileList2.findIndex(v => v.uuid === files.tempFile.uuid)
+				let item = this.fileList2.splice(index, 1)[0]
+				for (let i = 0; i < this.formData.attIds.length; i++) {
+					if (this.formData.attIds[i] == item.fileId) {
+						this.formData.attIds.splice(i, 1)
+					}
+				}
+
+			},
 			selectFile(files) {
 				console.log(files)
-				files.tempFilePaths.pop()
+				const fileUrl = files.tempFilePaths.pop()
 				const file = files.tempFiles.pop();
-				this.fileList.push(file)
+				const that = this
+				uni.uploadFile({
+					url: `${config.apiUrl}/business/attach/upload`, // api地址
+					files: [{
+						name: 'file',
+						uri: fileUrl
+					}],
+					name: 'file',
+					header: {
+						'Blade-Auth': uni.getStorageSync('userinfo').access_token
+					},
+					success: function(res) {
+						const result = JSON.parse(res.data)
+						if (result.code == 200) {
+							// console.log('success', result);
+							that.fileList.push(file)
+							that.fileList2.push({
+								...file,
+								fileId: result.data.id
+							})
+							that.formData.attIds.push(result.data.id)
+						}
+					}
+				});
+
+
 			},
 			bindTimeChange() {
 
 			},
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {
+					let params = {
+						...this.formData
+					}
+					addUrgentEvent(params).then(res => {
+						if (res.code === 200) {
+							uni.showToast({
+								title: '提交成功',
+								duration: 1000,
+							})
+							setTimeout(() => {
+								uni.navigateTo({
+									url: '/pages/home/index'
+								})
+							}, 1000)
+						}
+					})
 					console.log('success', res);
 				}).catch(err => {
 					console.log('err', err);

@@ -35,41 +35,53 @@
 
 <script>
 	import {
-		getNormalEventList
-	} from '@/api'
+		addMsg,
+		msgList,
+		getNormalEventList,
+		getUrgentEventList
+	} from "@/api.js"
 	export default {
 		data() {
 			return {
-				active: 0,
+				active: 1,
 				tabs: ['全部', '应急事件', '常规事件'],
 				title: 'Hello',
-				list: [{
-						title: '浏阳河隧道积水3人被困车顶',
-						time: '2022-05-12 10:12备份',
-						site: '浏阳河隧道南往北方向隧道内距离出口100',
-						img: [1, 2, 3]
-					},
-					{
-						title: '浏阳河隧道积水3人被困车顶',
-						time: '2022-05-12 10:12备份',
-						site: '浏阳河隧道南往北方向隧道内距离出口100',
-						img: [1, 2, 3]
-					},
-					{
-						title: '浏阳河隧道积水3人被困车顶',
-						time: '2022-05-12 10:12备份',
-						site: '浏阳河隧道南往北方向隧道内距离出口100',
-						img: [1, 2, 3]
-					}
-				]
+				list: [],
+				pageParams: {
+					current: 1,
+					size: 10,
+				},
+				totalPage: 99,
+			}
+		},
+		onReachBottom() {
+			this.pageParams.current++;
+			if (this.pageParams.current > this.totalPage) {
+				uni.hideNavigationBarLoading();
+				uni.showToast({
+					title: '暂无更多数据'
+				})
+			} else {
+				if(this.active == 1){
+					this.getList1()
+				}
+				// this.init();
 			}
 		},
 		onLoad() {
-
+			this.getList1()
 		},
 		methods: {
-			tabChange(i) {
-				this.active = i
+			getList1(){
+				getUrgentEventList(this.pageParams).then(res => {
+					console.log(res)
+					if (res.code === 200) {
+						this.list.push(...res.data.records)
+						this.totalPage = res.data.pages
+					}
+				})
+			},
+			getList(){
 				let obj = {
 					eventId: 2,
 					// ...this.
@@ -82,6 +94,9 @@
 					}
 					console.log(this.list)
 				})
+			},
+			tabChange(i) {
+				this.active = i
 				// this.list = this.list.concat(this.list)
 			}
 		}

@@ -2,19 +2,19 @@
 	<view class="comment_item">
 		<template v-if="level == 1">
 			<view class="head">
-				<view>{{item.name}}</view>
-				<view class="time">{{item.time}}</view>
+				<view>{{item.fsr}}</view>
+				<view class="time">{{item.cjsj}}</view>
 			</view>
 			<view class="text">
-				{{item.text}}
+				{{item.fsnr}}
 			</view>
 			<view class="reply">
-				<view @click="replyComment">
+				<view @click="replyComment(item)">
 					<image src="@/static/hf@2x.png"></image>回复
 				</view>
 			</view>
 		</template>
-		<view class="child_head" v-if="level == 1">
+		<view class="child_head" v-if="item.childs && item.childs.length > 0 && level == 1">
 			<view class="nums"> {{item.childs.length}}条讨论 </view>
 			<view class="isOpen" @click="isOpen = !isOpen">
 				<template v-if="isOpen">
@@ -35,7 +35,7 @@
 					{{item.text}}
 				</view>
 				<view class="reply">
-					<view @click="replyComment">
+					<view @click="replyComment(item)">
 						<image src="@/static/hf@2x.png"></image>回复
 					</view>
 				</view>
@@ -44,16 +44,6 @@
 		<comment-item v-if="item.childs && item.childs.length > 0 && isOpen" v-for="(v,i) in item.childs" :item="v"
 			:itemIndex="i" :parent="item" level="2">
 		</comment-item>
-		<uni-popup ref="popup" background-color="#fff" @change="change">
-			<view class="send_wrap">
-				<!-- <uni-forms-item name="name">
-					
-				</uni-forms-item> -->
-				<uni-easyinput :focus="true" type="textarea" :clearable="false" :inputBorder="false" v-model="commentText"
-					placeholder="发表内容" />
-				<view class="send_btn">发送</view>
-			</view>
-		</uni-popup>
 	</view>
 </template>
 
@@ -61,6 +51,9 @@
 	export default {
 		name: 'comment-item',
 		props: {
+			// id:{
+			// 	typeof:Number | String,
+			// },
 			itemIndex: {
 				type: Number
 			},
@@ -78,32 +71,28 @@
 			return {
 				title: 'Hello',
 				isOpen: true,
-				commentText:'',
 			}
 		},
 		onLoad() {
 
 		},
 		methods: {
-			replyComment() {
+			replyComment(val) {
 				console.log('回复')
-				this.toggle()
+				this.$emit('send',val)
+				// this.toggle()
 			},
-			change(e) {
-				console.log('当前模式：' + e.type + ',状态：' + e.show);
-			},
-			toggle(type) {
-				// this.type = type
-				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
-				this.$refs.popup.open('bottom')
-			},
+
+
 		}
 	}
 </script>
 
 <style>
 	.comment_item {}
-
+	page{
+		height: 100%;
+	}
 	.head {
 		display: flex;
 		height: 30px;
@@ -177,33 +166,5 @@
 		line-height: 13px;
 		padding: 10px;
 	}
-	.send_wrap{
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 10px;
-	}
-	/deep/.uni-textarea-wrapper{
-		background: #EFF3F7;
-		border-radius: 4px;
-		
-		/* width: 80%; */
-	}
-	/deep/.uni-easyinput__placeholder-class{
-		padding: 10px;
-		box-sizing: border-box;
-	}
-	/deep/.uni-textarea-textarea{
-		padding: 10px;
-		box-sizing: border-box;
-	}
-	.send_btn{
-		width: 80px;
-		flex-shrink: 0;
-		font-size: 18px;
-		font-weight: 400;
-		text-align: center;	
-		color: #9EAEC1;
 
-	}
 </style>
