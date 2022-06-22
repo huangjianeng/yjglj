@@ -37,8 +37,8 @@ export async function addNormalEvent(data){
 
 // 列表常规事件
 export async function getNormalEventList(data){
-	console.log(uni.getStorageSync('userinfo'))
-	console.log(uni.getStorageSync('userinfo').access_token)
+	// console.log(uni.getStorageSync('userinfo'))
+	// console.log(uni.getStorageSync('userinfo').access_token)
     return await new Promise((r) => {
         uni.request({
             method: "POST",
@@ -47,7 +47,11 @@ export async function getNormalEventList(data){
             header: {
                 'Blade-Auth': uni.getStorageSync('userinfo').access_token
             },
-            success: (res) => r(res.data),
+            success: (res) => {
+				// console.log(res)
+				r(res.data)
+				
+			},
         });
     });
 }

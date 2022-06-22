@@ -44,7 +44,7 @@
 		data() {
 			return {
 				active: 1,
-				tabs: ['全部', '应急事件', '常规事件'],
+				tabs: [ '应急事件', '常规事件'],
 				title: 'Hello',
 				list: [],
 				pageParams: {
@@ -62,17 +62,21 @@
 					title: '暂无更多数据'
 				})
 			} else {
-				if(this.active == 1){
-					this.getList1()
-				}
-				// this.init();
+				this.init()
 			}
 		},
 		onLoad() {
-			this.getList1()
+			this.init()
 		},
 		methods: {
-			getList1(){
+			init() {
+				if (this.active == 0) {
+					this.getList1()
+				} else if (this.active == 1) {
+					this.getList()
+				}
+			},
+			getList1() {
 				getUrgentEventList(this.pageParams).then(res => {
 					console.log(res)
 					if (res.code === 200) {
@@ -81,22 +85,24 @@
 					}
 				})
 			},
-			getList(){
-				let obj = {
-					eventId: 2,
-					// ...this.
-				}
-				getNormalEventList(obj).then(res => {
-					let [a, data] = res
-					console.log(data.data.code)
-					if (data.data.code == 200) {
-						this.list = data.data.data.records
+			getList() {
+				// console.log(data.data.code)
+				getNormalEventList(this.pageParams).then(res => {
+					console.log(res)
+					if (res.code == 200) {
+						this.list = res.data.records
+						this.totalPage = res.data.pages
 					}
 					console.log(this.list)
 				})
 			},
 			tabChange(i) {
 				this.active = i
+				this.pageParams = {
+					current: 1,
+					size: 10,
+				}
+				this.totalPage = 99
 				// this.list = this.list.concat(this.list)
 			}
 		}

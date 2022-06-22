@@ -64,7 +64,7 @@
 				fileList: [],
 				formData: {
 					state: '',
-					timestamp: '',
+					timestamp: new Date().getTime(),
 					addr: '雨花区长沙市左家塘',
 					content: '常规事件123',
 					// imageValue: [],
@@ -109,9 +109,9 @@
 			},
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {
-					let objectid = Math.round(Math.random()*1000000)
-					let obj = {eventId:2,objectid}
-					addNormalEvent({...obj,...this.formData}).then(res=>{
+					// let objectid = Math.round(Math.random()*1000000)
+					// let obj = {eventId:2,objectid}
+					addNormalEvent({...this.formData}).then(res=>{
 						console.log(res)
 					})
 					console.log('success', res);

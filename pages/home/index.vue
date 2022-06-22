@@ -2,7 +2,7 @@
 	<view class="home_wrap">
 		<view class="content">
 			<view class="header">
-				<view @click="showDrawer('showLeft')" class="user font24">Hello！张斌宇<span class="font12">></span></view>
+				<view @click="showDrawer('showLeft')" class="user font24">Hello！{{userInfo.role_name}}<span class="font12">></span></view>
 				<view class="mes_box">
 					<image @click="gotoMessage" src="@/static/message.png"></image>
 				</view>
@@ -27,20 +27,17 @@
 						<view class="level"></view>
 					</view>
 					<view class="height22">
-						<image src="@/static/time.png"></image>{{v.time}}
+						<uni-dateformat :date="v.time"></uni-dateformat>
 					</view>
 					<view class="height22">
 						<image src="@/static/site.png"></image> {{v.site}}
 					</view>
 					<view class="img_list">
-						<view class="img_wrap">
+<!-- 					<view class="img_wrap">
 							<image src="../../static/logo.png"></image>
-						</view>
-						<view class="img_wrap">
-							<image src="../../static/logo.png"></image>
-						</view>
-						<view class="img_wrap">
-							<image src="../../static/logo.png"></image>
+						</view> -->
+						<view class="img_wrap" v-for="(val,index) in v.attrIds" :key="index">
+							<image :src="getImg(val)"></image>
 						</view>
 					</view>
 				</view>
@@ -50,7 +47,7 @@
 		<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
 			<view class="example-body">
 				<view>
-					<view class="user_sidebar">Hello！张斌宇</view>
+					<view class="user_sidebar">Hello！{{userInfo.role_name}}</view>
 					<view class="height60" @click="gotoMessage">
 						<view>消息中心</view>
 						<view>></view>
@@ -73,6 +70,7 @@
 </template>
 
 <script>
+	import config from "@/config.js"
 	import {
 		getUrgentEventList
 	} from "@/api.js"
@@ -81,6 +79,7 @@
 			return {
 				title: 'Hello',
 				list: [],
+				userInfo: uni.getStorageSync('userinfo'),
 				pageParams: {
 					current: 1,
 					size: 10,
@@ -158,6 +157,9 @@
 			change(e, type) {
 				console.log((type === 'showLeft' ? '左窗口' : '右窗口') + (e ? '打开' : '关闭'));
 				this[type] = e
+			},
+			getImg(v) {
+				return config.apiUrl + '/business/attach/view/' + v.id
 			}
 		},
 		onNavigationBarButtonTap(e) {
