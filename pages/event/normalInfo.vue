@@ -169,6 +169,7 @@
 	.news_item image {
 		width: 14px;
 		height: 14px;
+		margin-right: 4px;
 	}
 
 	.title {

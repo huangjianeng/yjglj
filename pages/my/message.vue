@@ -28,7 +28,7 @@
 		data() {
 			return {
 				active: 0,
-				tabs: ['全部消息', '邀请通知', '讨论区'],
+				tabs: ['全部消息', '事件消息', '讨论区'],
 				title: 'Hello',
 				list: [],
 				pageParams: {
