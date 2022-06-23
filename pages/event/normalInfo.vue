@@ -4,13 +4,13 @@
 			<view class="title">
 				<view>{{details.sjmc}}</view>
 				<!-- <view class="point">领导关注</view> -->
-				<view class="level" v-if="details.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
+				<view class="level" v-if="details.sjdj == '1'" style="background: url('../../static/A级@2x.png')">A级
 				</view>
-				<view class="level" v-else-if="details.sjdj == 'B'" style="background: url('../../static/B级@2x.png')">
+				<view class="level" v-else-if="details.sjdj == '2'" style="background: url('../../static/B级@2x.png')">
 					B级</view>
-				<view class="level" v-else-if="details.sjdj == 'C'" style="background: url('../../static/C级@2x.png')">
+				<view class="level" v-else-if="details.sjdj == '3'" style="background: url('../../static/C级@2x.png')">
 					C级</view>
-				<view class="level" v-else-if="details.sjdj == 'D'" style="background: url('../../static/D级@2x.png')">D级
+				<view class="level" v-else-if="details.sjdj == '4'" style="background: url('../../static/D级@2x.png')">D级
 				</view>
 			</view>
 			<view class="height22">

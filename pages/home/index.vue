@@ -26,11 +26,11 @@
 					<view class="height22" style="justify-content: space-between;">
 						<view class="event_name">{{v.sjmc}}</view>
 						<!-- <view class="level"></view> -->
-						<view class="level" v-if="v.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
+						<view class="level" v-if="v.sjdj == '1'" style="background: url('../../static/A级@2x.png')">A级
 						</view>
-						<view class="level" v-else-if="v.sjdj == 'B'" style="background: url('../../static/B级@2x.png')">
+						<view class="level" v-else-if="v.sjdj == '2'" style="background: url('../../static/B级@2x.png')">
 							B级</view>
-						<view class="level" v-else-if="v.sjdj == 'C'" style="background: url('../../static/C级@2x.png')">
+						<view class="level" v-else-if="v.sjdj == '3'" style="background: url('../../static/C级@2x.png')">
 							C级</view>
 						<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
 					</view>

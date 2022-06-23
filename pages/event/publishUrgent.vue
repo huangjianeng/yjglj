@@ -83,11 +83,10 @@
 					gzyq: '', // 工作目标
 					attIds: [],
 					sjwz: '', // 事件地点
-					sjdj: 'D', // 事件等级
+					sjdj: 1, // 事件等级
 					sjzt: '预发布',
 					xy:'',
 					hlsjid:'',
-					// xy:''
 				},
 				fileList2: [],
 				rules: {
@@ -147,7 +146,7 @@
 						} = res
 						// that.latitude = latitude
 						// that.longitude = longitude
-						this.formData.xy = longitude + ',' + latitude
+						that.formData.xy = longitude + ',' + latitude
 						let params = {
 							tk: config.BowSiteKey,
 							type: `geocode`,
