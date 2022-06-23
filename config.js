@@ -8,4 +8,6 @@ export default {
 	base: 'http://113.240.253.3:8001',
 	// base: 'http://222.240.1.65:20080',
 	bname: 'uni.UNICB27E19',
+	BowSiteKey:'6d9ef6724cb3eed25c21ce267aca757b',
+	AdsiteKey:'6252621e16a30ed601deae4e7bdb63ef',
 }

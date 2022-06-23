@@ -1,44 +1,49 @@
 <template>
 	<view class="home_wrap">
 		<view class="content">
-			<view class="news_item">
-				<view class="title">
-					<view>{{details.sjmc}}</view>
-					<!-- <view class="point">领导关注</view> -->
-					<view class="level" v-if="details.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
+			<template v-if="id">
+				<view class="news_item">
+					<view class="title">
+						<view>{{details.sjmc}}</view>
+						<!-- <view class="point">领导关注</view> -->
+						<view class="level" v-if="details.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
+						</view>
+						<view class="level" v-else-if="details.sjdj == 'B'"
+							style="background: url('../../static/B级@2x.png')">
+							B级</view>
+						<view class="level" v-else-if="details.sjdj == 'C'"
+							style="background: url('../../static/C级@2x.png')">
+							C级</view>
+						<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
 					</view>
-					<view class="level" v-else-if="details.sjdj == 'B'"
-						style="background: url('../../static/B级@2x.png')">
-						B级</view>
-					<view class="level" v-else-if="details.sjdj == 'C'"
-						style="background: url('../../static/C级@2x.png')">
-						C级</view>
-					<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
-				</view>
-				<view class="height22">
-					<image src="@/static/time.png"></image>
-					<uni-dateformat :date="details.bgsj"></uni-dateformat>
-				</view>
-				<view class="height22" style="margin-bottom: 10px;">
-					<image src="@/static/site.png"></image> {{details.sjwz}}
-				</view>
-				<view class="line"></view>
-				<view class="text">
-					{{details.xcqk}}
-				</view>
-			</view>
-			<template v-if="attachList.length >0">
-				<view class="view_head">
-					<view>图片/视频</view>
-					<view class="seeAll">查看全部<image src="../../static/right.png"></image>
+					<view class="height22">
+						<image src="@/static/time.png"></image>
+						<uni-dateformat :date="details.bgsj"></uni-dateformat>
+					</view>
+					<view class="height22" style="margin-bottom: 10px;">
+						<image src="@/static/site.png"></image> {{details.sjwz}}
+					</view>
+					<view class="line"></view>
+					<view class="text">
+						{{details.xcqk}}
 					</view>
 				</view>
-				<view class="img_list">
-					<view class="img_wrap" v-for="(v,i) in attachList" :key="i">
-						<image :src="getImg(v)"></image>
+				<template v-if="attachList.length >0">
+					<view class="view_head">
+						<view>图片/视频</view>
+					<!-- 	<view class="seeAll">查看全部<image src="../../static/right.png"></image>
+						</view> -->
 					</view>
-				</view>
+					<view class="img_list">
+						<view class="img_wrap" v-for="(v,i) in attachList" :key="i" @click.stop="prevImg(attachList,i)">
+							<image :src="getImg(v)"></image>
+						</view>
+					</view>
+				</template>
 			</template>
+			<NormalInfo @prevImg="prevImg" v-else :details="normalInfo"></NormalInfo>
+
+			
 
 			<view class="view_head">
 				<view>讨论区</view>
@@ -49,7 +54,7 @@
 						v-model="commentText" placeholder="发表内容" />
 					<!-- <view class="send_btn" @click="sendMessage">发送</view> -->
 				</view>
-				<Comment @send="toggle" :list="list" :id="this.id"></Comment>
+				<Comment v-if="list.length > 0" @send="toggle" :list="list" :id="this.id"></Comment>
 			</view>
 
 			<uni-popup ref="popup" background-color="#fff" @change="change">
@@ -69,6 +74,7 @@
 <script>
 	import config from "@/config.js"
 	import Comment from "./comment"
+	import NormalInfo from "./normalInfo.vue"
 	import {
 		addMsg,
 		msgList,
@@ -76,7 +82,8 @@
 	} from "@/api.js"
 	export default {
 		components: {
-			Comment
+			Comment,
+			NormalInfo
 		},
 		data() {
 			return {
@@ -93,6 +100,7 @@
 				hfnrItem: {},
 				commentText: '',
 				userInfo: uni.getStorageSync('userinfo'),
+				normalInfo:{},
 			}
 		},
 		onReachBottom() {
@@ -104,23 +112,42 @@
 			}
 		},
 		onLoad(options) {
-			console.log('1', options)
-			this.id = options.id
-			console.log(typeof this.id)
-			this.init()
-			this.getMsgList()
+			console.log('1', options)			
+			if(options.id){
+				this.id = options.id
+				this.init()
+				this.getMsgList()
+			}else{
+				this.normalInfo = JSON.parse(options.data)
+				console.log(this.normalInfo)
+				this.getMsgList()
+			}			
 		},
 		methods: {
+			prevImg(item,index) {
+				console.log(item,index)
+				let ids = []
+				item.forEach(v => {
+					ids.push(this.getImg(v))
+				})
+				let obj = {
+					current:index,
+					urls: ids
+				}
+				console.log(ids)
+				uni.previewImage(obj)
+			},
 			sendMessage() {
 				let params = {
 					attIds: [],
 					hfnr: this.hfnrItem.fsnr ? this.hfnrItem.fsnr : '',
 					fsnr: this.commentText, //发送内容
 					fsr: this.userInfo.role_name, // 回复内容
-					sjid: this.id, // 事件id
+					sjid: this.id ? this.id : this.normalInfo.objectid, // 事件id
 				}
 				addMsg(params).then(res => {
 					console.log(res)
+					this.commentText = ''
 					this.$refs.popup.close()
 					this.getMsgList()
 				})
@@ -128,7 +155,7 @@
 			getMsgList() {
 				let params = {
 					...this.pageParams,
-					sjid: this.id
+					sjid:this.id ? this.id : this.normalInfo.objectid,
 				}
 				msgList(params).then(res => {
 					this.list = res.data.records
@@ -163,6 +190,9 @@
 </script>
 
 <style scoped lang="scss">
+	page{
+		height: 100%;
+	}
 	.home_wrap {
 		height: 100%;
 		width: 100%;
@@ -172,12 +202,13 @@
 		font-size: 13px;
 		padding: 10px;
 		box-sizing: border-box;
+		overflow: auto;
 	}
 
 	.content {
 		margin: 0 10px;
-		overflow: auto;
-		height: 100%;
+		// overflow: auto;
+		// height: 100%;
 	}
 
 	.header {
@@ -275,15 +306,16 @@
 		display: flex;
 		flex-wrap: wrap;
 		background-color: #FFFFFF;
-		justify-content: space-between;
 		padding: 10px;
 		border-radius: 10px;
 	}
 
 	.img_list .img_wrap {
-		width: 33%;
+		width: 32%;
+		margin-right: 1%;
+		margin-top: 4px;
 		height: 0;
-		padding-top: 33%;
+		padding-top: 32%;
 		border-radius: 4px;
 		position: relative;
 	}
@@ -363,8 +395,10 @@
 	}
 
 	.send_shade {
+		// height: 100%;
 		background-color: white;
 		border-radius: 10px;
+		margin-bottom: 10px;
 	}
 
 	.send_wrap {

@@ -31,7 +31,9 @@
 		{
 			"path": "pages/event/myPublish",
 			"style": {
-				"navigationBarTitleText": "我发布的事件"
+				"navigationBarTitleText": "我发布的事件",
+				"enablePullDownRefresh": true,
+				"allowsBounceVertical": "NO" //禁止下拉
 			}
 		},
 		{

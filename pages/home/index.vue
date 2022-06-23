@@ -21,9 +21,9 @@
 			</view>
 			<view class="news_wrap">
 				<view class="news_head">应急事件</view>
-				<view class="news_item" @click="gotoDetails" v-for="(v,i) in list" :key="i">
+				<view class="news_item" @click="gotoDetails(v)" v-for="(v,i) in list" :key="i">
 					<view class="height22" style="justify-content: space-between;">
-						<view>{{v.sjmc}}</view>
+						<view class="event_name">{{v.sjmc}}</view>
 						<!-- <view class="level"></view> -->
 						<view class="level" v-if="v.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
 						</view>
@@ -36,16 +36,18 @@
 						<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
 					</view>
 					<view class="height22">
+						<image src="@/static/time.png"></image>
 						<uni-dateformat :date="v.cjsj"></uni-dateformat>
 					</view>
 					<view class="height22">
-						<image src="@/static/site.png"></image> {{v.sjwz}}
+						<image src="@/static/site.png"></image> 
+						<view class="site">{{v.sjwz}}</view>
 					</view>
 					<view class="img_list">
 <!-- 					<view class="img_wrap">
 							<image src="../../static/logo.png"></image>
 						</view> -->
-						<view class="img_wrap" v-for="(val,index) in v.attIds" :key="index">
+						<view class="img_wrap" v-for="(val,index) in v.attIds" @click.stop="prevImg(v.attIds,index)" :key="index">
 							<image :src="getImg(val)"></image>
 						</view>
 					</view>
@@ -120,6 +122,18 @@
 					}
 				})
 			},
+			prevImg(item,index) {
+				let ids = []
+				item.forEach(v => {
+					ids.push(this.getImg(v))
+				})
+				let obj = {
+					current:index,
+					urls: ids
+				}
+				console.log(ids)
+				uni.previewImage(obj)
+			},
 			logout() {
 				this.$refs.showLeft.close()
 				uni.navigateTo({
@@ -149,10 +163,10 @@
 				}
 
 			},
-			gotoDetails() {
+			gotoDetails(v) {
 				console.log(uni)
 				uni.navigateTo({
-					url: '/pages/event/details',
+					url: '/pages/event/details?id='+ v.id,
 				});
 			},
 			showDrawer(e) {
@@ -294,19 +308,21 @@
 	.news_item image {
 		width: 14px;
 		height: 14px;
+		margin-right: 4px;
 	}
 
 	.img_list {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: space-between;
+		// justify-content: space-between;
 		margin-top: 4px;
 	}
 
 	.img_list .img_wrap {
-		width: 33%;
+		width: 32%;
+		margin-right: 1%;
 		height: 0;
-		padding-top: 33%;
+		padding-top: 32%;
 		border-radius: 4px;
 		position: relative;
 	}
@@ -339,8 +355,25 @@
 		height: 22px;
 		display: flex;
 		align-items: center;
+		font-size: 13px;
+		font-weight: 400;
+		color: #9EAEC1;
 	}
-
+	.site{
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+	.event_name{
+		font-size: 18px;
+		font-weight: 500;
+		color: #1D2732;
+		width: 90%;
+		align-items: center;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
 	.example-body {
 		width: 100%;
 		height: 100%;

@@ -37,10 +37,28 @@ export async function addNormalEvent(data){
     });
 }
 
+
+//  获取当前时间段的预警id
+export async function getEventId(data){
+    return await new Promise((r) => {
+        uni.request({
+            method: "GET",
+            url: `${config.apiUrl}/business/hlEvent/getCurEventByTime`,
+            data,
+            header: {
+                'Blade-Auth': uni.getStorageSync('userinfo').access_token
+            },
+            success: (res) => {
+				// console.log(res)
+				r(res.data)
+				
+			},
+        });
+    });
+}
+// http://175.6.177.203:8082/sde/normalEvent/list
 // 列表常规事件
 export async function getNormalEventList(data){
-	// console.log(uni.getStorageSync('userinfo'))
-	// console.log(uni.getStorageSync('userinfo').access_token)
     return await new Promise((r) => {
         uni.request({
             method: "POST",
@@ -51,8 +69,7 @@ export async function getNormalEventList(data){
             },
             success: (res) => {
 				// console.log(res)
-				r(res.data)
-				
+				r(res.data)				
 			},
         });
     });

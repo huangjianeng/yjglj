@@ -3,7 +3,9 @@
 		<template v-if="level == 1">
 			<view class="head">
 				<view>{{item.fsr}}</view>
-				<view class="time">{{item.cjsj}}</view>
+				<view class="time">
+					<uni-dateformat :date="item.cjsj"></uni-dateformat>
+				</view>
 			</view>
 			<view class="text">
 				{{item.fsnr}}
@@ -28,11 +30,13 @@
 		<view class="comment_item_2" v-else-if="level == 2">
 			<view>
 				<view class="head">
-					<view>{{item.name}}</view>
-					<view class="time">{{item.time}}</view>
+					<view>{{item.fsr}}</view>
+					<view class="time">
+						<uni-dateformat :date="item.cjsj"></uni-dateformat>
+					</view>
 				</view>
 				<view class="text">
-					{{item.text}}
+					{{item.fsnr}}
 				</view>
 				<view class="reply">
 					<view @click="replyComment(item)">
@@ -79,7 +83,7 @@
 		methods: {
 			replyComment(val) {
 				console.log('回复')
-				this.$emit('send',val)
+				this.$emit('send', val)
 				// this.toggle()
 			},
 
@@ -90,9 +94,11 @@
 
 <style>
 	.comment_item {}
-	page{
+
+	page {
 		height: 100%;
 	}
+
 	.head {
 		display: flex;
 		height: 30px;
@@ -166,5 +172,4 @@
 		line-height: 13px;
 		padding: 10px;
 	}
-
 </style>

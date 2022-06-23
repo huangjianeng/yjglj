@@ -12,7 +12,7 @@
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
-						<view class="value_wrap ">
+						<view class="value_wrap time_box">
 							<uni-forms-item name="bgsj" label="发生时间" required>
 								<uni-datetime-picker v-model="formData.bgsj" placeholder="请选择事件发生时间" />
 							</uni-forms-item>
@@ -21,7 +21,7 @@
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
 							<uni-forms-item name="sjwz" label="详细地址" required>
-								<uni-easyinput :inputBorder="false" clearable suffixIcon="location"
+								<uni-easyinput :inputBorder="false" suffixIcon="location" @iconClick="getSite"
 									v-model="formData.sjwz" placeholder="如区、街道、桥、路等" />
 							</uni-forms-item>
 						</view>
@@ -116,6 +116,38 @@
 			}
 		},
 		methods: {
+			getSite() {
+				const that = this
+				uni.getLocation({
+					geocode: true,
+					success(res) {
+						console.log('经纬度', res)
+						let {
+							latitude,
+							longitude
+						} = res
+						let params = {
+							tk: config.BowSiteKey,
+							type: `geocode`,
+							postStr: {
+								"lon": longitude,
+								"lat": latitude,
+								"ver": 1
+							},
+
+						}
+						uni.request({
+							url: 'https://api.tianditu.gov.cn/geocoder',
+							data: params
+						}).then(result => {
+							console.log('位置', result)
+							let sjwz = result[1].data.result.formatted_address
+							console.log(sjwz)
+							that.formData.sjwz = sjwz
+						})
+					}
+				})
+			},
 			deleteFile(files) {
 				let index = this.fileList2.findIndex(v => v.uuid === files.tempFile.uuid)
 				let item = this.fileList2.splice(index, 1)[0]
@@ -154,8 +186,6 @@
 						}
 					}
 				});
-
-
 			},
 			bindTimeChange() {
 
@@ -284,8 +314,12 @@
 		padding: 0;
 	}
 
-	/deep/.uni-icons {
+	/deep/.time_box .uni-icons {
 		display: none;
+	}
+
+	/deep/ .uni-icons {
+		font-size: 20px !important;
 	}
 
 	/deep/.uni-date-x--border {

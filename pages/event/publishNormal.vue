@@ -15,7 +15,8 @@
 						<view class="value_wrap ">
 							<uni-forms-item label="图片/视频">
 								<view class="value_wrap">
-									<uni-file-picker :auto-upload="false" @select="selectFile" v-model="fileList">
+									<uni-file-picker @delete="deleteFile" :auto-upload="false" @select="selectFile"
+										v-model="fileList">
 									</uni-file-picker>
 								</view>
 							</uni-forms-item>
@@ -30,7 +31,7 @@
 						</view>
 					</view>
 					<view class="uni-form-item uni-column">
-						<view class="value_wrap ">
+						<view class="value_wrap time_box">
 							<uni-forms-item name="timestamp" label="发生时间" required>
 								<uni-datetime-picker returnType="timestamp" v-model="formData.timestamp"
 									placeholder="请选择事件发生时间" />
@@ -40,7 +41,7 @@
 					<view class="uni-form-item uni-column">
 						<view class="value_wrap ">
 							<uni-forms-item name="addr" label="详细地址" required>
-								<uni-easyinput :inputBorder="false" clearable suffixIcon="location"
+								<uni-easyinput :inputBorder="false" clearable @iconClick="getSite" suffixIcon="location"
 									v-model="formData.addr" placeholder="如区、街道、桥、路等" />
 							</uni-forms-item>
 						</view>
@@ -57,17 +58,22 @@
 
 <script>
 	import {
-		addNormalEvent
+		addNormalEvent,
+		getEventId
 	} from '@/api'
+	import config from '@/config.js'
 	export default {
 		data() {
 			return {
 				fileList: [],
+				fileList2: [],
 				formData: {
 					state: '',
 					timestamp: new Date().getTime(),
 					addr: '雨花区长沙市左家塘',
 					content: '常规事件123',
+					pic_attr: [],
+					pic_ids: []
 					// imageValue: [],
 				},
 				rules: {
@@ -94,16 +100,100 @@
 							required: true,
 							errorMessage: '不能为空'
 						}]
-					}
+					},
+					eventId: '',
+					latitude: '',
+					longitude: '',
 				},
 			}
 		},
+		onLoad() {
+			this.init()
+			this.getSite()
+		},
 		methods: {
+			init() {
+				let params = {
+					time: new Date().getTime()
+				}
+				getEventId(params).then(res => {
+					console.log(res)
+					this.eventId = res.data
+				})
+			},
+			deleteFile(files) {
+				let index = this.fileList2.findIndex(v => v.uuid === files.tempFile.uuid)
+				let item = this.fileList2.splice(index, 1)[0]
+				for (let i = 0; i < this.formData.pic_ids.length; i++) {
+					if (this.formData.pic_ids[i] == item.fileId) {
+						this.formData.pic_attr.splice(i, 1)
+						this.formData.pic_ids.splice(i, 1)
+					}
+				}
+			},
 			selectFile(files) {
 				console.log(files)
-				files.tempFilePaths.pop()
+				const fileUrl = files.tempFilePaths.pop()
 				const file = files.tempFiles.pop();
-				this.fileList.push(file)
+				const that = this
+				uni.uploadFile({
+					url: `${config.apiUrl}/business/attach/upload`, // api地址
+					files: [{
+						name: 'file',
+						uri: fileUrl
+					}],
+					name: 'file',
+					header: {
+						'Blade-Auth': uni.getStorageSync('userinfo').access_token
+					},
+					success: function(res) {
+						const result = JSON.parse(res.data)
+						if (result.code == 200) {
+							console.log('success', result);
+							that.fileList.push(file)
+							that.fileList2.push({
+								...file,
+								fileId: result.data.id
+							})
+							that.formData.pic_ids.push(result.data.id)
+							that.formData.pic_attr.push(result.data.fjmc)
+						}
+					}
+				});
+			},
+			getSite() {
+				const that = this
+				uni.getLocation({
+					geocode: true,
+					success(res) {
+						console.log('经纬度', res)
+						let {
+							latitude,
+							longitude
+						} = res
+						that.latitude = latitude
+						that.longitude = longitude
+						let params = {
+							tk: config.BowSiteKey,
+							type: `geocode`,
+							postStr: {
+								"lon": longitude,
+								"lat": latitude,
+								"ver": 1
+							},
+
+						}
+						uni.request({
+							url: 'https://api.tianditu.gov.cn/geocoder',
+							data: params
+						}).then(result => {
+							console.log('位置', result)
+							let sjwz = result[1].data.result.formatted_address
+							console.log(sjwz)
+							that.formData.addr = sjwz
+						})
+					}
+				})
 			},
 			bindTimeChange() {
 
@@ -112,15 +202,36 @@
 				this.$refs['valiForm'].validate().then(res => {
 					// let objectid = Math.round(Math.random()*1000000)
 					// let obj = {eventId:2,objectid}
-					let params = {
-						entity: this.formData,
-						x:21,
-						y:123
+					// eventID=2&
+					// this.formData.pic_attr.splice(i, 1)
+					// this.formData.pic_ids.splice(i, 1)
+					let entity = {
+						...this.formData,
+						pic_attr: this.formData.pic_attr.join(','),
+						pic_ids: this.formData.pic_ids.join(',')
+
 					}
-					addNormalEvent().then(res => {
-						console.log(res)
+					let params = {
+						eventID: this.eventId,
+						entity,
+						x: 21,
+						y: 123
+					}
+					addNormalEvent(params).then(res => {
+						if (res.result) {
+							uni.showToast({
+								title: '提交成功',
+								duration: 1000,
+							})
+							setTimeout(() => {
+								uni.navigateTo({
+									url: '/pages/home/index'
+								})
+							}, 1000)
+						}
+						// console.log(res)
 					})
-					console.log('success', res);
+					// console.log('success', res);
 				}).catch(err => {
 					console.log('err', err);
 				})
@@ -226,8 +337,13 @@
 		padding: 0;
 	}
 
-	/deep/.uni-icons {
+	/deep/ .time_box .uni-icons {
 		display: none;
+	}
+
+	/deep/.uni-icons {
+		font-size: 20px !important;
+
 	}
 
 	/deep/.uni-date-x--border {
