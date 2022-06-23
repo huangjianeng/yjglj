@@ -66,6 +66,7 @@
 					let obj = {...this.formData,grantType:'password'}
 					loginApi(obj).then(res=>{
 						// console.log(res)
+						uni.clearStorageSync();
 						uni.setStorageSync('userinfo', res)
 						// uni.setStorageSync('loginTime', Date.now())
 						uni.navigateTo({

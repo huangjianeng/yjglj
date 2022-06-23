@@ -32,9 +32,12 @@
 					</view> -->
 			</view>
 			<view class="img_list">
-				<view class="img_wrap" v-for="(v,i) in details.picIds.split(',')" :key="i"
+				<view class="img_wrap" v-for="(v,i) in details.picIds.split(',')" :key="i" v-if="i <3"
 					@click.stop="prevImg(details.picIds.split(','),i)">
 					<image :src="getImg(v)"></image>
+				</view>
+				<view class="position_num" v-if="details.picIds.split(',').length > 3">
+					+{{details.picIds.split(',').length}}
 				</view>
 			</view>
 		</template>
@@ -253,7 +256,8 @@
 	}
 
 	.height22 {
-		height: 22px;
+		// height: 22px;
+		margin: 6px 0;
 		display: flex;
 		align-items: center;
 		// justify-content:space-between

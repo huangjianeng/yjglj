@@ -4,9 +4,10 @@
 			<template v-if="id">
 				<view class="news_item">
 					<view class="title">
-						<view>{{details.sjmc}}</view>
+						<view class="event_name">{{details.sjmc}}</view>
 						<!-- <view class="point">领导关注</view> -->
-						<view class="level" v-if="details.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
+						<view class="level" v-if="details.sjdj == 'A'"
+							style="background: url('../../static/A级@2x.png')">A级
 						</view>
 						<view class="level" v-else-if="details.sjdj == 'B'"
 							style="background: url('../../static/B级@2x.png')">
@@ -30,8 +31,8 @@
 				</view>
 				<template v-if="attachList.length >0">
 					<view class="view_head">
-						<view>图片/视频</view>
-					<!-- 	<view class="seeAll">查看全部<image src="../../static/right.png"></image>
+						<view>图片</view>
+						<!-- 	<view class="seeAll">查看全部<image src="../../static/right.png"></image>
 						</view> -->
 					</view>
 					<view class="img_list">
@@ -43,7 +44,7 @@
 			</template>
 			<NormalInfo @prevImg="prevImg" v-else :details="normalInfo"></NormalInfo>
 
-			
+
 
 			<view class="view_head">
 				<view>讨论区</view>
@@ -100,7 +101,7 @@
 				hfnrItem: {},
 				commentText: '',
 				userInfo: uni.getStorageSync('userinfo'),
-				normalInfo:{},
+				normalInfo: {},
 			}
 		},
 		onReachBottom() {
@@ -112,26 +113,26 @@
 			}
 		},
 		onLoad(options) {
-			console.log('1', options)			
-			if(options.id){
+			console.log('1', options)
+			if (options.id) {
 				this.id = options.id
 				this.init()
 				this.getMsgList()
-			}else{
+			} else {
 				this.normalInfo = JSON.parse(options.data)
 				console.log(this.normalInfo)
 				this.getMsgList()
-			}			
+			}
 		},
 		methods: {
-			prevImg(item,index) {
-				console.log(item,index)
+			prevImg(item, index) {
+				console.log(item, index)
 				let ids = []
 				item.forEach(v => {
 					ids.push(this.getImg(v))
 				})
 				let obj = {
-					current:index,
+					current: index,
 					urls: ids
 				}
 				console.log(ids)
@@ -155,7 +156,7 @@
 			getMsgList() {
 				let params = {
 					...this.pageParams,
-					sjid:this.id ? this.id : this.normalInfo.objectid,
+					sjid: this.id ? this.id : this.normalInfo.objectid,
 				}
 				msgList(params).then(res => {
 					this.list = res.data.records
@@ -190,9 +191,10 @@
 </script>
 
 <style scoped lang="scss">
-	page{
+	page {
 		height: 100%;
 	}
+
 	.home_wrap {
 		height: 100%;
 		width: 100%;
@@ -237,6 +239,8 @@
 		border-radius: 9px;
 		padding: 16px 12px;
 	}
+
+	.event_name {}
 
 	.point {
 		color: #0175FE;
@@ -345,7 +349,7 @@
 	}
 
 	.height22 {
-		height: 22px;
+		margin: 6px 0;
 		display: flex;
 		align-items: center;
 		// justify-content:space-between

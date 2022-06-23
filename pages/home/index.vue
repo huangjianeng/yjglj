@@ -2,7 +2,8 @@
 	<view class="home_wrap">
 		<view class="content">
 			<view class="header">
-				<view @click="showDrawer('showLeft')" class="user font24">Hello！{{userInfo.role_name}}<span class="font12">></span></view>
+				<view @click="showDrawer('showLeft')" class="user font24">Hello！{{userInfo.role_name}}<span
+						class="font12">></span></view>
 				<view class="mes_box">
 					<image @click="gotoMessage" src="@/static/message.png"></image>
 				</view>
@@ -27,11 +28,9 @@
 						<!-- <view class="level"></view> -->
 						<view class="level" v-if="v.sjdj == 'A'" style="background: url('../../static/A级@2x.png')">A级
 						</view>
-						<view class="level" v-else-if="v.sjdj == 'B'"
-							style="background: url('../../static/B级@2x.png')">
+						<view class="level" v-else-if="v.sjdj == 'B'" style="background: url('../../static/B级@2x.png')">
 							B级</view>
-						<view class="level" v-else-if="v.sjdj == 'C'"
-							style="background: url('../../static/C级@2x.png')">
+						<view class="level" v-else-if="v.sjdj == 'C'" style="background: url('../../static/C级@2x.png')">
 							C级</view>
 						<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
 					</view>
@@ -40,15 +39,16 @@
 						<uni-dateformat :date="v.cjsj"></uni-dateformat>
 					</view>
 					<view class="height22">
-						<image src="@/static/site.png"></image> 
+						<image src="@/static/site.png"></image>
 						<view class="site">{{v.sjwz}}</view>
 					</view>
 					<view class="img_list">
-<!-- 					<view class="img_wrap">
-							<image src="../../static/logo.png"></image>
-						</view> -->
-						<view class="img_wrap" v-for="(val,index) in v.attIds" @click.stop="prevImg(v.attIds,index)" :key="index">
+						<view class="img_wrap" v-for="(val,index) in v.attIds" @click.stop="prevImg(v.attIds,index)"
+							:key="index" v-if="index <3">
 							<image :src="getImg(val)"></image>
+						</view>
+						<view class="position_num" v-if="v.attIds.length > 3">
+							+{{v.attIds.length}}
 						</view>
 					</view>
 				</view>
@@ -113,7 +113,7 @@
 			this.init()
 		},
 		methods: {
-			init(){
+			init() {
 				getUrgentEventList(this.pageParams).then(res => {
 					console.log(res)
 					if (res.code === 200) {
@@ -122,19 +122,21 @@
 					}
 				})
 			},
-			prevImg(item,index) {
+			prevImg(item, index) {
 				let ids = []
 				item.forEach(v => {
 					ids.push(this.getImg(v))
 				})
 				let obj = {
-					current:index,
+					current: index,
 					urls: ids
 				}
 				console.log(ids)
 				uni.previewImage(obj)
 			},
 			logout() {
+				uni.removeStorageSync('userinfo')
+				uni.clearStorageSync();
 				this.$refs.showLeft.close()
 				uni.navigateTo({
 					url: '/pages/login/index'
@@ -166,7 +168,7 @@
 			gotoDetails(v) {
 				console.log(uni)
 				uni.navigateTo({
-					url: '/pages/event/details?id='+ v.id,
+					url: '/pages/event/details?id=' + v.id,
 				});
 			},
 			showDrawer(e) {
@@ -316,6 +318,21 @@
 		flex-wrap: wrap;
 		// justify-content: space-between;
 		margin-top: 4px;
+		position: relative;
+	}
+
+	.position_num {
+		position: absolute;
+		color: white;
+		right: 10px;
+		bottom: 10px;
+		width: 20px;
+		height: 20px;
+		border-radius: 10px;
+		font-size: 12px;
+		text-align: center;
+		line-height: 18px;
+		background-color: #4E5E72;
 	}
 
 	.img_list .img_wrap {
@@ -359,12 +376,14 @@
 		font-weight: 400;
 		color: #9EAEC1;
 	}
-	.site{
+
+	.site {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
-	.event_name{
+
+	.event_name {
 		font-size: 18px;
 		font-weight: 500;
 		color: #1D2732;
@@ -374,6 +393,7 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
+
 	.example-body {
 		width: 100%;
 		height: 100%;

@@ -68,7 +68,8 @@
 <script>
 	import {
 		addUrgentEvent,
-		fileUpload
+		fileUpload,
+		getEventId 
 	} from "@/api.js"
 	import config from '@/config.js'
 	export default {
@@ -84,6 +85,8 @@
 					sjwz: '', // 事件地点
 					sjdj: 'D', // 事件等级
 					sjzt: '预发布',
+					xy:'',
+					hlsjid:'',
 					// xy:''
 				},
 				fileList2: [],
@@ -113,9 +116,25 @@
 						}]
 					}
 				},
+				// eventId:'',
+				// latitude:'',
+				// longitude:'',
 			}
 		},
+		onLoad() {
+			this.init()
+			this.getSite()
+		},
 		methods: {
+			init() {
+				let params = {
+					time: new Date().getTime()
+				}
+				getEventId(params).then(res => {
+					console.log(res)
+					this.formData.hlsjid = res.data
+				})
+			},
 			getSite() {
 				const that = this
 				uni.getLocation({
@@ -126,6 +145,9 @@
 							latitude,
 							longitude
 						} = res
+						// that.latitude = latitude
+						// that.longitude = longitude
+						this.formData.xy = longitude + ',' + latitude
 						let params = {
 							tk: config.BowSiteKey,
 							type: `geocode`,
@@ -134,7 +156,6 @@
 								"lat": latitude,
 								"ver": 1
 							},
-
 						}
 						uni.request({
 							url: 'https://api.tianditu.gov.cn/geocoder',
@@ -186,9 +207,6 @@
 						}
 					}
 				});
-			},
-			bindTimeChange() {
-
 			},
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {

@@ -152,3 +152,19 @@ export async function msgList(data){
         });
     });
 }
+
+// 系统消息
+export async function systemMsgList(data){
+	// console.log(data)
+    return await new Promise((r) => {
+        uni.request({
+            method: "POST",
+            url: `${config.apiUrl}/business/sysMsg/list`,
+            data,
+            header: {
+                'Blade-Auth': uni.getStorageSync('userinfo').access_token
+            },
+            success: (res) => r(res.data),
+        });
+    });
+}
