@@ -65,19 +65,23 @@
 					...this.pageParams
 				}
 				if (this.active == 1) {
-					params.lx = 2
+					params.lx = '2'
 				} else if (this.active == 2) {
-					params.lx = 4
+					params.lx = '4'
 				} else {
 					params.lx_in = '2,4'
 				}
+				console.log(params)
 				systemMsgList(params).then(res => {
+					
 					console.log(res)
 					this.list.push(...res.data.records)
 					this.totalPage = res.data.pages
 				})
 			},
 			tabChange(i) {
+				
+				console.log('111')
 				this.active = i
 				this.pageParams = {
 					current: 1,

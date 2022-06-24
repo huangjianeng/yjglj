@@ -26,13 +26,13 @@
 					<view class="height22" style="justify-content: space-between;">
 						<view class="event_name">{{v.sjmc}}</view>
 						<!-- <view class="level"></view> -->
-						<view class="level" v-if="v.sjdj == '1'" style="background: url('../../static/A级@2x.png')">A级
+						<view class="level" v-if="v.sjdj == '1'" style="background: url('../../static/A2x.png')">A级
 						</view>
-						<view class="level" v-else-if="v.sjdj == '2'" style="background: url('../../static/B级@2x.png')">
+						<view class="level" v-else-if="v.sjdj == '2'" style="background: url('../../static/B2x.png')">
 							B级</view>
-						<view class="level" v-else-if="v.sjdj == '3'" style="background: url('../../static/C级@2x.png')">
+						<view class="level" v-else-if="v.sjdj == '3'" style="background: url('../../static/C2x.png')">
 							C级</view>
-						<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
+						<view class="level" v-else style="background: url('../../static/D2x.png')">D级</view>
 					</view>
 					<view class="height22">
 						<image src="@/static/time.png"></image>
@@ -129,7 +129,8 @@
 				})
 				let obj = {
 					current: index,
-					urls: ids
+					urls: ids,
+					// indicator:'number'
 				}
 				console.log(ids)
 				uni.previewImage(obj)
@@ -253,7 +254,7 @@
 
 	.event_enter .yj {
 		box-sizing: border-box;
-		width: 185px;
+		width: 47%;
 		height: 82px;
 		background: linear-gradient(316deg, #40D4FF 0%, #0074FE 100%);
 		border-radius: 9px;
@@ -264,7 +265,7 @@
 
 	.event_enter .cg {
 		box-sizing: border-box;
-		width: 185px;
+		width: 47%;
 		height: 82px;
 		background: linear-gradient(314deg, #32EEE2 0%, #00C2E2 100%);
 		border-radius: 9px;

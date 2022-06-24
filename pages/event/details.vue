@@ -7,15 +7,15 @@
 						<view class="event_name">{{details.sjmc}}</view>
 						<!-- <view class="point">领导关注</view> -->
 						<view class="level" v-if="details.sjdj == '1'"
-							style="background: url('../../static/A级@2x.png')">A级
+							style="background: url('../../static/A2x.png')">A级
 						</view>
 						<view class="level" v-else-if="details.sjdj == '2'"
-							style="background: url('../../static/B级@2x.png')">
+							style="background: url('../../static/B2x.png')">
 							B级</view>
 						<view class="level" v-else-if="details.sjdj == '3'"
-							style="background: url('../../static/C级@2x.png')">
+							style="background: url('../../static/C2x.png')">
 							C级</view>
-						<view class="level" v-else style="background: url('../../static/D级@2x.png')">D级</view>
+						<view class="level" v-else style="background: url('../../static/D2x.png')">D级</view>
 					</view>
 					<view class="height22">
 						<image src="@/static/time.png"></image>

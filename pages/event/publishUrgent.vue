@@ -57,7 +57,7 @@
 					</view>
 				</view>
 				<view class="uni-btn-v">
-					<button @click="formSubmit">发布事件</button>
+					<button @click="formSubmit">上报事件</button>
 				</view>
 			</uni-forms>
 			<!-- <u-toast ref="uToast"></u-toast> -->
@@ -84,7 +84,7 @@
 					attIds: [],
 					sjwz: '', // 事件地点
 					sjdj: 1, // 事件等级
-					sjzt: '预发布',
+					sjzt: '1',
 					xy:'',
 					hlsjid:'',
 				},
@@ -121,6 +121,9 @@
 			}
 		},
 		onLoad() {
+			uni.setNavigationBarTitle({
+				title: '应急事件'
+			})
 			this.init()
 			this.getSite()
 		},

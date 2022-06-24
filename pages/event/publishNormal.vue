@@ -48,7 +48,7 @@
 					</view>
 				</view>
 				<view class="uni-btn-v">
-					<button @click="formSubmit">发布事件</button>
+					<button @click="formSubmit">上报事件</button>
 				</view>
 			</uni-forms>
 
@@ -70,8 +70,8 @@
 				formData: {
 					state: '',
 					timestamp: new Date().getTime(),
-					addr: '雨花区长沙市左家塘',
-					content: '常规事件123',
+					addr: '',
+					content: '',
 					pic_attr: [],
 					pic_ids: []
 					// imageValue: [],
@@ -108,6 +108,9 @@
 			}
 		},
 		onLoad() {
+			uni.setNavigationBarTitle({
+				title: '常规事件'
+			})
 			this.init()
 			this.getSite()
 		},
@@ -214,8 +217,8 @@
 					let params = {
 						eventID: this.eventId,
 						entity,
-						x: 21,
-						y: 123
+						x: this.longitude,
+						y: this.latitude
 					}
 					addNormalEvent(params).then(res => {
 						if (res.result) {
