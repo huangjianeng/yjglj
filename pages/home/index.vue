@@ -2,7 +2,7 @@
 	<view class="home_wrap">
 		<view class="content">
 			<view class="header">
-				<view @click="showDrawer('showLeft')" class="user font24">Hello！{{userInfo.role_name}}<span
+				<view @click="showDrawer('showLeft')" class="user_box">Hello!{{userInfo.user_name}}<span
 						class="font12">></span></view>
 				<view class="mes_box">
 					<image @click="gotoMessage" src="@/static/message.png"></image>
@@ -58,7 +58,7 @@
 		<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
 			<view class="example-body">
 				<view>
-					<view class="user_sidebar">Hello！{{userInfo.role_name}}</view>
+					<view class="user_sidebar">Hello！{{userInfo.user_name}}</view>
 					<view class="height60" @click="gotoMessage">
 						<view>消息中心</view>
 						<view>></view>
@@ -236,9 +236,10 @@
 		height: 70px;
 	}
 
-	.user {
+	.user_box {
 		display: flex;
 		align-items: center;
+		font-size: 18px;
 	}
 
 	.mes_box image {
