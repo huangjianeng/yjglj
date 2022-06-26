@@ -131,7 +131,7 @@
 			getList1() {
 				let params = {
 					...this.pageParams,
-					ascs:'bgsj'
+					descs:'bgsj'
 				}
 				getUrgentEventList(params).then(res => {
 					console.log(res)
@@ -145,7 +145,7 @@
 				// console.log(data.data.code)
 				let params = {
 					...this.pageParams,
-					ascs:'timestamp'
+					descs:'timestamp'
 				}
 				getNormalEventList(params).then(res => {
 					console.log(res)

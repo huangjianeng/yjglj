@@ -263,6 +263,7 @@
 		width: 14px;
 		height: 14px;
 		margin-right: 4px;
+		flex-shrink: 0;
 	}
 
 	.title {

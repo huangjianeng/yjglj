@@ -121,7 +121,7 @@
 			init() {
 				let params = {
 					...this.pageParams,
-					ascs:'bgsj'
+					descs:'bgsj'
 				}
 				getUrgentEventList(params).then(res => {
 					console.log(res)
