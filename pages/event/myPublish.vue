@@ -69,7 +69,7 @@
 	export default {
 		data() {
 			return {
-				active: 1,
+				active: 0,
 				tabs: ['应急事件', '常规事件'],
 				title: 'Hello',
 				list: [],
@@ -129,7 +129,11 @@
 
 			},
 			getList1() {
-				getUrgentEventList(this.pageParams).then(res => {
+				let params = {
+					...this.pageParams,
+					ascs:'bgsj'
+				}
+				getUrgentEventList(params).then(res => {
 					console.log(res)
 					if (res.code === 200) {
 						this.list.push(...res.data.records)
@@ -139,7 +143,11 @@
 			},
 			getList() {
 				// console.log(data.data.code)
-				getNormalEventList(this.pageParams).then(res => {
+				let params = {
+					...this.pageParams,
+					ascs:'timestamp'
+				}
+				getNormalEventList(params).then(res => {
 					console.log(res)
 					if (res.code == 200) {
 						this.list.push(...res.data.records)

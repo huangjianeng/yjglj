@@ -64,11 +64,16 @@
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {
 					let obj = {...this.formData,grantType:'password'}
-					loginApi(obj).then(res=>{
+					uni.showLoading({
+						title: "加载中"
+					});
+					loginApi(obj).then(result=>{
 						// console.log(res)
 						uni.clearStorageSync();
-						uni.setStorageSync('userinfo', res)
+						uni.setStorageSync('userinfo', result)
 						// uni.setStorageSync('loginTime', Date.now())
+						console.log(result)
+						uni.hideLoading();	
 						uni.navigateTo({
 							url:'/pages/home/index'
 						})

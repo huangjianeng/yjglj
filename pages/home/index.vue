@@ -32,11 +32,11 @@
 							B级</view>
 						<view class="level" v-else-if="v.sjdj == '3'" style="background: url('../../static/C2x.png')">
 							C级</view>
-						<view class="level" v-else style="background: url('../../static/D2x.png')">D级</view>
+						<view class="level" v-else-if="v.sjdj == '4'" style="background: url('../../static/D2x.png')">D级</view>
 					</view>
 					<view class="height22">
 						<image src="@/static/time.png"></image>
-						<uni-dateformat :date="v.cjsj"></uni-dateformat>
+						<uni-dateformat :date="v.bgsj"></uni-dateformat>
 					</view>
 					<view class="height22">
 						<image src="@/static/site.png"></image>
@@ -87,10 +87,10 @@
 	} from "@/api.js"
 	export default {
 		data() {
+			console.log(uni.getStorageSync('userinfo'))
 			return {
 				title: 'Hello',
 				list: [],
-				userInfo: uni.getStorageSync('userinfo'),
 				pageParams: {
 					current: 1,
 					size: 10,
@@ -112,9 +112,18 @@
 		onLoad() {
 			this.init()
 		},
+		computed:{
+			userInfo:()=>{
+				return uni.getStorageSync('userinfo')
+			}
+		},
 		methods: {
 			init() {
-				getUrgentEventList(this.pageParams).then(res => {
+				let params = {
+					...this.pageParams,
+					ascs:'bgsj'
+				}
+				getUrgentEventList(params).then(res => {
 					console.log(res)
 					if (res.code === 200) {
 						this.list.push(...res.data.records)
@@ -224,7 +233,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 70px
+		height: 70px;
 	}
 
 	.user {
