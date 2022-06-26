@@ -77,7 +77,7 @@
 			return {
 				fileList: [],
 				formData: {
-					sjmc: '1',
+					sjmc: '',
 					bgsj: new Date().getTime(), // 报告时间
 					xcqk: '', //现场状况
 					gzyq: '', // 工作目标
