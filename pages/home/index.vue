@@ -32,7 +32,8 @@
 							B级</view>
 						<view class="level" v-else-if="v.sjdj == '3'" style="background: url('../../static/C2x.png')">
 							C级</view>
-						<view class="level" v-else-if="v.sjdj == '4'" style="background: url('../../static/D2x.png')">D级</view>
+						<view class="level" v-else-if="v.sjdj == '4'" style="background: url('../../static/D2x.png')">D级
+						</view>
 					</view>
 					<view class="height22">
 						<image src="@/static/time.png"></image>
@@ -98,6 +99,17 @@
 				totalPage: 99,
 			}
 		},
+		onPullDownRefresh() {
+			this.pageParams = {
+				current: 1,
+				size: 10,
+			}
+			this.totalPage = 99
+			this.list = []
+			this.init();
+			uni.stopPullDownRefresh()
+			// console.log('111')
+		},
 		onReachBottom() {
 			this.pageParams.current++;
 			if (this.pageParams.current > this.totalPage) {
@@ -112,8 +124,8 @@
 		onLoad() {
 			this.init()
 		},
-		computed:{
-			userInfo:()=>{
+		computed: {
+			userInfo: () => {
 				return uni.getStorageSync('userinfo')
 			}
 		},
@@ -121,7 +133,7 @@
 			init() {
 				let params = {
 					...this.pageParams,
-					descs:'bgsj'
+					descs: 'bgsj'
 				}
 				getUrgentEventList(params).then(res => {
 					console.log(res)

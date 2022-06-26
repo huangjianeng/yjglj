@@ -80,6 +80,17 @@
 				totalPage: 99,
 			}
 		},
+		onPullDownRefresh() {
+			this.pageParams = {
+				current: 1,
+				size: 10,
+			}
+			this.totalPage = 99
+			this.list = []
+			this.init();
+			uni.stopPullDownRefresh()
+			// console.log('111')
+		},
 		onReachBottom() {
 			this.pageParams.current++;
 			if (this.pageParams.current > this.totalPage) {

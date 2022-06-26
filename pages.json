@@ -4,16 +4,14 @@
 			"path": "pages/home/index",
 			"style": {
 				"navigationBarTitleText": "开福区雨洪监测预警指挥决策系统",
-				"enablePullDownRefresh": true,
-				"allowsBounceVertical": "NO" //禁止下拉
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/event/details",
 			"style": {
-				"navigationBarTitleText": "事件详情",
-				"enablePullDownRefresh": true,
-				"allowsBounceVertical": "NO" //禁止下拉
+				"navigationBarTitleText": "事件详情"
+				// "enablePullDownRefresh": true
 			}
 		},
 		{
@@ -32,14 +30,14 @@
 			"path": "pages/event/myPublish",
 			"style": {
 				"navigationBarTitleText": "我发布的事件",
-				"enablePullDownRefresh": true,
-				"allowsBounceVertical": "NO" //禁止下拉
+				"enablePullDownRefresh": true
 			}
 		},
 		{
 			"path": "pages/my/message",
 			"style": {
-				"navigationBarTitleText": "消息中心"
+				"navigationBarTitleText": "消息中心",
+				"enablePullDownRefresh": true
 			}
 		},
 		{

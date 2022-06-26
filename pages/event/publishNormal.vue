@@ -218,7 +218,8 @@
 						eventID: this.eventId,
 						entity,
 						x: this.longitude,
-						y: this.latitude
+						y: this.latitude,
+						user_id:uni.getStorageSync('userinfo').user_id,
 					}
 					addNormalEvent(params).then(res => {
 						if (res.result) {
