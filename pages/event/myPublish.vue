@@ -20,9 +20,22 @@
 					<view class="site">{{v.sjwz}}</view>
 				</view>
 				<view class="img_list">
-					<view class="img_wrap" v-for="(val,index) in v.attIds" @click.stop="prevImg(v.attIds,index)"
+					<view class="img_wrap" v-for="(val,index) in v.attachList"
 						v-if="index <3" :key="index">
-						<image :src="getImg(val)"></image>
+						<template v-if="isVideo(val.wjlx,index)">
+							<!-- #ifndef APP-PLUS -->
+							<video :disabled="false" :controls="false" :src="getImg(val.id)">
+								<cover-view class="image-upload-Item-video-fixed"
+									@click.stop="previewVideo(getImg(val.id))">
+								</cover-view>
+							</video>
+							<!-- #endif -->
+							<!-- #ifdef APP-PLUS -->
+							<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val.id))">
+							</view>
+							<!-- #endif -->
+						</template>
+						<image v-else :src="getImg(val.id)" @click.stop="prevImg(v.attachList,index)"></image>
 					</view>
 					<view class="position_num" v-if="v.attIds.length > 3">
 						+{{v.attIds.length}}
@@ -41,19 +54,39 @@
 					<uni-dateformat :date="parseInt(v.timestamp)"></uni-dateformat>
 				</view>
 				<view class="height22">
-					<image src="@/static/site.png"></image> 
+					<image src="@/static/site.png"></image>
 					<view class="site">{{v.addr}}</view>
 				</view>
 				<view class="img_list">
-					<view class="img_wrap" v-for="(val,index) in v.picIds.split(',')" v-if="index <3"
-						@click.stop="prevImg(v.picIds.split(','),index)" :key="index">
-						<image :src="getImg(val)"></image>
+					<!-- {{v.picIds.split(',')}} -->
+					<view class="img_wrap" v-for="(val,index) in v.picIds.split(',')" v-if="v.picIds && index <3"
+						:key="index">
+						<template v-if="isVideo(v.picAttr.split(',')[index])">
+							<!-- #ifndef APP-PLUS -->
+							<video :disabled="false" :controls="false" :src="getImg(val)">
+								<cover-view class="image-upload-Item-video-fixed"
+									@click.stop="previewVideo(getImg(val))">
+								</cover-view>
+							</video>
+							<!-- #endif -->
+							<!-- #ifdef APP-PLUS -->
+							<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val))">
+							</view>
+							<!-- #endif -->
+						</template>
+						<image v-else :src="getImg(val)" @click.stop="prevImg2(v.picIds.split(','),index)"></image>
 					</view>
 					<view class="position_num" v-if="v.picIds.split(',').length > 3">
 						+{{v.picIds.split(',').length}}
 					</view>
 				</view>
 			</view>
+		</view>
+		<view class="preview-full" v-if="previewVideoSrc!=''">
+			<video :autoplay="true" :src="previewVideoSrc" :show-fullscreen-btn="false">
+				<cover-view class="preview-full-close" @click="previewVideoClose"> ×
+				</cover-view>
+			</video>
 		</view>
 	</view>
 </template>
@@ -78,6 +111,7 @@
 					size: 10,
 				},
 				totalPage: 99,
+				previewVideoSrc: '',
 			}
 		},
 		onPullDownRefresh() {
@@ -106,8 +140,41 @@
 			this.init()
 		},
 		methods: {
+			previewVideo(src) {
+				this.previewVideoSrc = src;
+			},
+			previewVideoClose() {
+				this.previewVideoSrc = ''
+			},
+			isVideo(item) {
+				let isPass = false
+				if (!/(gif|jpg|jpeg|png|gif|jpg|png)$/i.test(item)) {
+					isPass = true
+				}
+				return isPass
+			},
+			isVideo2(item) {
+				let picAttr = item.picAttr
+				let isPass = false
+				if (!/(gif|jpg|jpeg|png|gif|jpg|png)$/i.test(item)) {
+					isPass = true
+				}
+				return isPass
+			},
 			prevImg(item, index) {
-				let ids = []
+				let ids = []	
+				item.forEach(v => {
+					ids.push(this.getImg(v.id))
+				})
+				let obj = {
+					current: index,
+					urls: ids
+				}
+				console.log(ids)
+				uni.previewImage(obj)
+			},
+			prevImg2(item, index) {
+				let ids = []	
 				item.forEach(v => {
 					ids.push(this.getImg(v))
 				})
@@ -142,7 +209,7 @@
 			getList1() {
 				let params = {
 					...this.pageParams,
-					descs:'bgsj'
+					descs: 'bgsj'
 				}
 				getUrgentEventList(params).then(res => {
 					console.log(res)
@@ -156,7 +223,8 @@
 				// console.log(data.data.code)
 				let params = {
 					...this.pageParams,
-					descs:'timestamp'
+					descs: 'timestamp',
+					// user_id:Number(uni.getStorageSync('userinfo').user_id)
 				}
 				getNormalEventList(params).then(res => {
 					console.log(res)
@@ -286,7 +354,7 @@
 		left: 0;
 		top: 0;
 	}
-	
+
 
 
 	.height22 {
@@ -299,12 +367,14 @@
 		font-weight: 400;
 		color: #9EAEC1;
 	}
-	.site{
+
+	.site {
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
-	.event_name{
+
+	.event_name {
 		font-size: 18px;
 		font-weight: 500;
 		color: #1D2732;
@@ -314,6 +384,7 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
+
 	// .event_name view{
 
 	// }
@@ -328,5 +399,54 @@
 		font-size: 13px;
 		font-weight: 400;
 		color: #9EAEC1;
+	}
+
+	.image-upload-Item-video-fixed {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 10rpx;
+		z-index: 996;
+	}
+
+	.img_wrap video {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+
+	.preview-full {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1002;
+	}
+
+	.preview-full video {
+		width: 100%;
+		height: 100%;
+		z-index: 1002;
+	}
+
+	.preview-full-close {
+		position: fixed;
+		right: 32rpx;
+		top: 25rpx;
+		width: 60rpx;
+		height: 60rpx;
+		line-height: 60rpx;
+		text-align: center;
+		z-index: 1003;
+		color: #fff;
+		font-size: 65rpx;
+		font-weight: bold;
 	}
 </style>

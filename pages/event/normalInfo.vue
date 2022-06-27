@@ -32,15 +32,35 @@
 					</view> -->
 			</view>
 			<view class="img_list">
-				<view class="img_wrap" v-for="(v,i) in details.picIds.split(',')" :key="i" v-if="i <3"
-					@click.stop="prevImg(details.picIds.split(','),i)">
-					<image :src="getImg(v)"></image>
+				<view class="img_wrap" v-for="(val,index) in details.picIds.split(',')" :key="index" v-if="index <3"
+					>
+					<template v-if="isVideo(details.picAttr.split(',')[index])">
+						<!-- #ifndef APP-PLUS -->
+						<video :disabled="false" :controls="false" :src="getImg(val)">
+							<cover-view class="image-upload-Item-video-fixed"
+								@click.stop="previewVideo(getImg(val))">
+							</cover-view>
+						</video>
+						<!-- #endif -->
+						<!-- #ifdef APP-PLUS -->
+						<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val))">
+						</view>
+						<!-- #endif -->
+					</template>
+					<image v-else :src="getImg(val)" @click.stop="prevImg(details.picIds.split(','),index)"></image>
+					<!-- <image :src="getImg(v)"></image> -->
 				</view>
 				<view class="position_num" v-if="details.picIds.split(',').length > 3">
 					+{{details.picIds.split(',').length}}
 				</view>
 			</view>
 		</template>
+		<view class="preview-full" v-if="previewVideoSrc!=''">
+			<video :autoplay="true" :src="previewVideoSrc" :show-fullscreen-btn="false">
+				<cover-view class="preview-full-close" @click="previewVideoClose"> ×
+				</cover-view>
+			</video>
+		</view>
 	</view>
 </template>
 
@@ -73,12 +93,23 @@
 				commentText: '',
 				userInfo: uni.getStorageSync('userinfo'),
 				normalInfo: {},
+				previewVideoSrc:'',
 			}
 		},
 		methods: {
-			// prevImg(ids, i) {
-			// 	this.$emit('prevImg', ids, i)
-			// },
+			previewVideo(src) {
+				this.previewVideoSrc = src;
+			},
+			previewVideoClose() {
+				this.previewVideoSrc = ''
+			},
+			isVideo(item) {
+				let isPass = false
+				if (!/(gif|jpg|jpeg|png|gif|jpg|png)$/i.test(item)) {
+					isPass = true
+				}
+				return isPass
+			},
 			prevImg(item, index) {
 				console.log(item, index)
 				let ids = []
@@ -346,5 +377,52 @@
 		text-align: center;
 		color: #9EAEC1;
 
+	}
+	.image-upload-Item-video-fixed {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 10rpx;
+		z-index: 996;
+	}
+	
+	.img_wrap video {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	.preview-full {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1002;
+	}
+	
+	.preview-full video {
+		width: 100%;
+		height: 100%;
+		z-index: 1002;
+	}
+	
+	.preview-full-close {
+		position: fixed;
+		right: 32rpx;
+		top: 25rpx;
+		width: 60rpx;
+		height: 60rpx;
+		line-height: 60rpx;
+		text-align: center;
+		z-index: 1003;
+		color: #fff;
+		font-size: 65rpx;
+		font-weight: bold;
 	}
 </style>

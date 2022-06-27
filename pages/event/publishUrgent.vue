@@ -48,9 +48,12 @@
 						<view class="value_wrap ">
 							<uni-forms-item label="图片/视频">
 								<view class="value_wrap">
-									<uni-file-picker :auto-upload="false" @select="selectFile" @delete="deleteFile"
+									<!-- 									<uni-file-picker :auto-upload="false" @select="selectFile" @delete="deleteFile"
 										v-model="fileList">
-									</uni-file-picker>
+									</uni-file-picker> -->
+									<htz-image-upload mediaType="all" :max="9" :dataType="1" v-model="ceshiData"
+										@imgDelete="fileDelete" @uploadSuccess="uploadSuccess" :action="getUrl()">
+									</htz-image-upload>
 								</view>
 							</uni-forms-item>
 						</view>
@@ -69,10 +72,14 @@
 	import {
 		addUrgentEvent,
 		fileUpload,
-		getEventId 
+		getEventId
 	} from "@/api.js"
+	import UploadFile from "@/components/htz-image-upload/htz-image-upload.vue"
 	import config from '@/config.js'
 	export default {
+		components: {
+			UploadFile
+		},
 		data() {
 			return {
 				fileList: [],
@@ -85,8 +92,8 @@
 					sjwz: '', // 事件地点
 					sjdj: 1, // 事件等级
 					sjzt: '1',
-					xy:'',
-					hlsjid:'',
+					xy: '',
+					hlsjid: '',
 				},
 				fileList2: [],
 				rules: {
@@ -118,6 +125,7 @@
 				// eventId:'',
 				// latitude:'',
 				// longitude:'',
+				ceshiData: []
 			}
 		},
 		onLoad() {
@@ -128,6 +136,35 @@
 			this.getSite()
 		},
 		methods: {
+			getUrl() {
+				return `${config.apiUrl}/business/attach/upload`
+			},
+			fileDelete(val){
+				console.log(val.del.id)
+			},
+			uploadSuccess(res) { //上传成功
+				console.log(res)
+				var _res = JSON.parse(res.data);
+				if (_res.code == 200) {
+					let fileType = _res.data.wjlx.split('/')[1]
+					let type = 1 // 0 图片  1视频
+					console.log(fileType)
+					if (/(gif|jpg|jpeg|png|gif|jpg|png)$/i.test(fileType)) {
+						console.log(fileType)
+						type = 0
+					}
+					let url = this.getImg(_res.data.id)
+					this.ceshiData.push({
+						url,
+						type,
+						id: _res.data.id
+					});
+				}
+				console.log(this.ceshiData)
+			},
+			getImg(id) {
+				return config.apiUrl + '/business/attach/view/' + id
+			},
 			init() {
 				let params = {
 					time: new Date().getTime()
@@ -212,8 +249,13 @@
 			},
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {
+					let attIds = []
+					this.ceshiData.forEach(v => {
+						attIds.push(v.id)
+					})
 					let params = {
-						...this.formData
+						...this.formData,
+						attIds
 					}
 					addUrgentEvent(params).then(res => {
 						if (res.code === 200) {

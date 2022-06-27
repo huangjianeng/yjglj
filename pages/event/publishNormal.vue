@@ -15,9 +15,13 @@
 						<view class="value_wrap ">
 							<uni-forms-item label="图片/视频">
 								<view class="value_wrap">
-									<uni-file-picker @delete="deleteFile" :auto-upload="false" @select="selectFile"
+<!-- 									<uni-file-picker @delete="deleteFile" :auto-upload="false" @select="selectFile"
 										v-model="fileList">
-									</uni-file-picker>
+									</uni-file-picker> -->
+									
+									<htz-image-upload mediaType="all" :max="9" :dataType="1" v-model="fileData"
+										@imgDelete="fileDelete" @uploadSuccess="uploadSuccess" :action="getUrl()">
+									</htz-image-upload>
 								</view>
 							</uni-forms-item>
 						</view>
@@ -57,14 +61,19 @@
 </template>
 
 <script>
+	import UploadFile from "@/components/htz-image-upload/htz-image-upload.vue"
 	import {
 		addNormalEvent,
 		getEventId
 	} from '@/api'
 	import config from '@/config.js'
 	export default {
+		components: {
+			UploadFile
+		},
 		data() {
 			return {
+				fileData:[],
 				fileList: [],
 				fileList2: [],
 				formData: {
@@ -115,6 +124,36 @@
 			this.getSite()
 		},
 		methods: {
+			getUrl() {
+				return `${config.apiUrl}/business/attach/upload`
+			},
+			fileDelete(val){
+				console.log(val.del.id)
+			},
+			uploadSuccess(res) { //上传成功
+				console.log(res)
+				var _res = JSON.parse(res.data);
+				if (_res.code == 200) {
+					let fileType = _res.data.wjlx.split('/')[1]
+					let type = 1 // 0 图片  1视频
+					console.log(fileType)
+					if (/(gif|jpg|jpeg|png|gif|jpg|png)$/i.test(fileType)) {
+						console.log(fileType)
+						type = 0
+					}
+					let url = this.getImg(_res.data.id)
+					this.fileData.push({
+						url,
+						type,
+						id: _res.data.id,
+						fileType:_res.data.wjlx
+					});
+				}
+				console.log(this.fileData)
+			},
+			getImg(id) {
+				return config.apiUrl + '/business/attach/view/' + id
+			},
 			init() {
 				let params = {
 					time: new Date().getTime()
@@ -203,23 +242,25 @@
 			},
 			formSubmit() {
 				this.$refs['valiForm'].validate().then(res => {
-					// let objectid = Math.round(Math.random()*1000000)
-					// let obj = {eventId:2,objectid}
-					// eventID=2&
-					// this.formData.pic_attr.splice(i, 1)
-					// this.formData.pic_ids.splice(i, 1)
+
+					let pic_ids = []
+					let pic_attr = []
+					this.fileData.forEach(v => {
+						pic_ids.push(v.id)
+						pic_attr.push((v.fileType))
+					})
 					let entity = {
 						...this.formData,
-						pic_attr: this.formData.pic_attr.join(','),
-						pic_ids: this.formData.pic_ids.join(',')
+						pic_attr: pic_attr.join(','),
+						pic_ids: pic_ids.join(',')
 
 					}
 					let params = {
 						eventID: this.eventId,
 						entity,
-						x: this.longitude,
-						y: this.latitude,
-						user_id:uni.getStorageSync('userinfo').user_id,
+						x: this.longitude || 122,
+						y: this.latitude || 23,
+						user_id: Number(uni.getStorageSync('userinfo').user_id),
 					}
 					addNormalEvent(params).then(res => {
 						if (res.result) {

@@ -38,8 +38,8 @@
 			return {
 				title: 'Hello',
 				formData: {
-					username: '1001',
-					password: '123456',
+					username: '',
+					password: '',
 				},
 				rules: {
 					username: {
