@@ -7,9 +7,20 @@
 		</view>
 		<view class="list_wrap" v-if="active == 0">
 			<view class="list_item" v-for="(v,i) in list" :key="i" @click="gotoDetails(v)">
-				<view class="height22">
+				<view class="height22" style="height: 24px;">
+					<view v-if="v.sjdj == 1" class="sjdj_wrap">进行中</view>
+					<view v-else-if="v.sjdj == 2" class="sjdj_wrap" style="background: #9EAEC1;">预发布</view>
+					<view v-else-if="v.sjdj == 3" class="sjdj_wrap" style="background: #FF4166;">受阻</view>
+					<view v-else-if="v.sjdj == 4" class="sjdj_wrap" style="background: #FFB302;">暂缓</view>
 					<view class="event_name">{{v.sjmc}}</view>
-					<view class="level"></view>
+					<view class="level" v-if="v.sjdj == '1'" style="background: url('../../static/A2x.png')">A级
+					</view>
+					<view class="level" v-else-if="v.sjdj == '2'" style="background: url('../../static/B2x.png')">
+						B级</view>
+					<view class="level" v-else-if="v.sjdj == '3'" style="background: url('../../static/C2x.png')">
+						C级</view>
+					<view class="level" v-else-if="v.sjdj == '4'" style="background: url('../../static/D2x.png')">D级
+					</view>
 				</view>
 				<view class="height22">
 					<image src="@/static/time.png"></image>
@@ -48,7 +59,7 @@
 			<view class="list_item" v-for="(v,i) in list" :key="i" @click="gotoDetails(v)">
 				<view class="height22 event_name">
 					<view class="event_name">{{v.content}}</view>
-					<view class="level"></view>
+					<!-- <view class="level"></view> -->
 				</view>
 				<view class="height22">
 					<image src="@/static/time.png"></image>
@@ -469,5 +480,26 @@
 		color: #fff;
 		font-size: 65rpx;
 		font-weight: bold;
+	}
+	
+	.level {
+		width: 40px;
+		height: 18px;
+		line-height: 20px;
+		border-radius: 2px;
+		text-align: center;
+		color: #FFFFFF;
+		font-size: 13;
+		flex-shrink: 0;
+	}
+	.sjdj_wrap{
+		padding: 2px 4px;
+		margin-right: 4px;
+		font-size: 12px;
+		text-align: center;
+		background: #2675FF;
+		border-radius: 4px;
+		color: white;
+		flex-shrink: 0;
 	}
 </style>

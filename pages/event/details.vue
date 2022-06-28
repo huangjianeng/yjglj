@@ -4,7 +4,13 @@
 			<template v-if="id">
 				<view class="news_item">
 					<view class="title">
-						<view class="event_name">{{details.sjmc}}</view>
+						<view style="display: flex;align-items: center;">
+							<view v-if="details.sjdj == 1" class="sjdj_wrap">进行中</view>
+							<view v-else-if="details.sjdj == 2" class="sjdj_wrap" style="background: #9EAEC1;">预发布</view>
+							<view v-else-if="details.sjdj == 3" class="sjdj_wrap" style="background: #FF4166;">受阻</view>
+							<view v-else-if="details.sjdj == 4" class="sjdj_wrap" style="background: #FFB302;">暂缓</view>
+							<view class="event_name">{{details.sjmc}}</view>
+						</view>
 						<!-- <view class="point">领导关注</view> -->
 						<view class="level" v-if="details.sjdj == '1'" style="background: url('../../static/A2x.png')">
 							A级
@@ -286,7 +292,11 @@
 		padding: 16px 12px;
 	}
 
-	.event_name {}
+	.event_name {
+		font-size: 16px;
+		font-weight: 500;
+		color: #1D2732;
+	}
 
 	.point {
 		color: #0175FE;
@@ -313,7 +323,6 @@
 	}
 
 	.title {
-		height: 22px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -400,6 +409,9 @@
 		margin: 6px 0;
 		display: flex;
 		align-items: center;
+		font-weight: 400;
+		color: #9EAEC1;
+		font-size: 13px;
 		// justify-content:space-between
 	}
 
@@ -534,5 +546,25 @@
 		color: #fff;
 		font-size: 65rpx;
 		font-weight: bold;
+	}
+	.level {
+		width: 40px;
+		height: 18px;
+		line-height: 20px;
+		border-radius: 2px;
+		text-align: center;
+		color: #FFFFFF;
+		font-size: 13;
+		flex-shrink: 0;
+	}
+	.sjdj_wrap{
+		padding: 2px 4px;
+		margin-right: 4px;
+		font-size: 12px;
+		text-align: center;
+		background: #2675FF;
+		border-radius: 4px;
+		color: white;
+		flex-shrink: 0;
 	}
 </style>

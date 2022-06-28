@@ -3,7 +3,8 @@
 		<view class="content">
 			<view class="header">
 				<view @click="showDrawer('showLeft')" class="user_box">{{userInfo.user_name}}
-				<image class="name_icon" src="@/static/right@2x.png"></image></view>
+					<image class="name_icon" src="@/static/right@2x.png"></image>
+				</view>
 				<view class="mes_box">
 					<image @click="gotoMessage" src="@/static/message.png"></image>
 				</view>
@@ -23,7 +24,11 @@
 			<view class="news_wrap">
 				<view class="news_head">应急事件</view>
 				<view class="news_item" @click="gotoDetails(v)" v-for="(v,i) in list" :key="i">
-					<view class="height22" style="justify-content: space-between;">
+					<view class="height22" style="justify-content: space-between;height: 24px;">
+						<view v-if="v.sjdj == 1" class="sjdj_wrap">进行中</view>
+						<view v-else-if="v.sjdj == 2" class="sjdj_wrap" style="background: #9EAEC1;">预发布</view>
+						<view v-else-if="v.sjdj == 3" class="sjdj_wrap" style="background: #FF4166;">受阻</view>
+						<view v-else-if="v.sjdj == 4" class="sjdj_wrap" style="background: #FFB302;">暂缓</view>
 						<view class="event_name">{{v.sjmc}}</view>
 						<!-- <view class="level"></view> -->
 						<view class="level" v-if="v.sjdj == '1'" style="background: url('../../static/A2x.png')">A级
@@ -102,9 +107,9 @@
 	import {
 		getUrgentEventList
 	} from "@/api.js"
+
 	export default {
 		data() {
-			console.log(uni.getStorageSync('userinfo'))
 			return {
 				appVideoPoster: '/static/htz-image-upload/play.png',
 				title: 'Hello',
@@ -201,11 +206,13 @@
 				})
 			},
 			gotoMyPublish() {
+				this.$refs.showLeft.close()
 				uni.navigateTo({
 					url: '/pages/event/myPublish',
 				});
 			},
 			gotoMessage() {
+				this.$refs.showLeft.close()
 				uni.navigateTo({
 					url: '/pages/my/message',
 				});
@@ -290,10 +297,11 @@
 		font-size: 18px;
 	}
 
-	.name_icon{
+	.name_icon {
 		width: 18px;
 		height: 18px;
 	}
+
 	.mes_box image {
 		width: 20px;
 		height: 20px;
@@ -368,6 +376,7 @@
 		text-align: center;
 		color: #FFFFFF;
 		font-size: 13;
+		flex-shrink: 0;
 	}
 
 	.news_item image {
@@ -573,6 +582,16 @@
 		font-size: 65rpx;
 		font-weight: bold;
 	}
-	
 
+	.sjdj_wrap {
+		padding: 0px 4px;
+		margin-right: 4px;
+		line-height: 20px;
+		font-size: 12px;
+		text-align: center;
+		background: #2675FF;
+		border-radius: 4px;
+		color: white;
+		flex-shrink: 0;
+	}
 </style>
