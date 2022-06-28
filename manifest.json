@@ -47,7 +47,8 @@
         },
         /* 模块配置 */
         "modules" : {
-            "Maps" : {}
+            "Maps" : {},
+            "VideoPlayer" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -82,6 +83,14 @@
                     }
                 },
                 "ad" : {}
+            },
+            "icons" : {
+                "android" : {
+                    "hdpi" : "static/logo@2x.png",
+                    "xhdpi" : "static/logo@2x.png",
+                    "xxhdpi" : "static/logo@2x.png",
+                    "xxxhdpi" : "static/logo@2x.png"
+                }
             }
         }
     },

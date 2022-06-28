@@ -20,8 +20,7 @@
 					<view class="site">{{v.sjwz}}</view>
 				</view>
 				<view class="img_list">
-					<view class="img_wrap" v-for="(val,index) in v.attachList"
-						v-if="index <3" :key="index">
+					<view class="img_wrap" v-for="(val,index) in v.attachList" v-if="index <3" :key="index">
 						<template v-if="isVideo(val.wjlx,index)">
 							<!-- #ifndef APP-PLUS -->
 							<video :disabled="false" :controls="false" :src="getImg(val.id)">
@@ -33,9 +32,11 @@
 							<!-- #ifdef APP-PLUS -->
 							<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val.id))">
 							</view>
+							<image style="width: 100%;height: 100%;" mode="widthFix" :src="appVideoPoster">
+							</image>
 							<!-- #endif -->
 						</template>
-						<image v-else :src="getImg(val.id)" @click.stop="prevImg(v.attachList,index)"></image>
+						<image v-else :src="getImg(val.id)" @click.stop="prevImg(v.attachList,val)"></image>
 					</view>
 					<view class="position_num" v-if="v.attIds.length > 3">
 						+{{v.attIds.length}}
@@ -72,9 +73,11 @@
 							<!-- #ifdef APP-PLUS -->
 							<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val))">
 							</view>
+							<image style="width: 100%;height: 100%;" mode="widthFix" :src="appVideoPoster">
+							</image>
 							<!-- #endif -->
 						</template>
-						<image v-else :src="getImg(val)" @click.stop="prevImg2(v.picIds.split(','),index)"></image>
+						<image v-else :src="getImg(val)" @click.stop="prevImg2(v,val)"></image>
 					</view>
 					<view class="position_num" v-if="v.picIds.split(',').length > 3">
 						+{{v.picIds.split(',').length}}
@@ -102,6 +105,7 @@
 	export default {
 		data() {
 			return {
+				appVideoPoster:'/static/htz-image-upload/play.png',
 				active: 0,
 				tabs: ['应急事件', '常规事件'],
 				title: 'Hello',
@@ -161,10 +165,15 @@
 				}
 				return isPass
 			},
-			prevImg(item, index) {
-				let ids = []	
-				item.forEach(v => {
+			prevImg(items, val) {
+				let ids = []
+				let index = 0
+				let imgs =  items.filter(v=>!this.isVideo(v.wjlx))
+				imgs.forEach((v,i) => {
 					ids.push(this.getImg(v.id))
+					if(val.id == v.id){
+						index = i
+					}
 				})
 				let obj = {
 					current: index,
@@ -173,16 +182,28 @@
 				console.log(ids)
 				uni.previewImage(obj)
 			},
-			prevImg2(item, index) {
-				let ids = []	
-				item.forEach(v => {
+			prevImg2(item, id) {
+				let ids = item.picIds.split(',')
+				let fileTypes = item.picAttr.split(',')
+				fileTypes.forEach((v,i) => {
+					if(!this.isVideo(v)){
+						ids.splice(i,1)
+					}
+					// ids.push(this.getImg(v))
+				})
+				let urls = []
+				let current = 0
+				ids.forEach((v,i)=>{
+					if(id == v.id){
+						current = i
+					}
 					ids.push(this.getImg(v))
 				})
 				let obj = {
-					current: index,
-					urls: ids
+					current,
+					urls
 				}
-				console.log(ids)
+				// console.log(ids)
 				uni.previewImage(obj)
 			},
 			init() {
@@ -440,8 +461,8 @@
 		position: fixed;
 		right: 32rpx;
 		top: 25rpx;
-		width: 60rpx;
-		height: 60rpx;
+		width: 80rpx;
+		height: 80rpx;
 		line-height: 60rpx;
 		text-align: center;
 		z-index: 1003;

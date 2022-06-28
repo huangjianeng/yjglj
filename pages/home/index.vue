@@ -2,8 +2,8 @@
 	<view class="home_wrap">
 		<view class="content">
 			<view class="header">
-				<view @click="showDrawer('showLeft')" class="user_box">Hello!{{userInfo.user_name}}<span
-						class="font12">></span></view>
+				<view @click="showDrawer('showLeft')" class="user_box">{{userInfo.user_name}}
+				<image class="name_icon" src="@/static/right@2x.png"></image></view>
 				<view class="mes_box">
 					<image @click="gotoMessage" src="@/static/message.png"></image>
 				</view>
@@ -56,9 +56,11 @@
 								<!-- #ifdef APP-PLUS -->
 								<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val.id))">
 								</view>
+								<image mode="widthFix" :src="appVideoPoster">
+								</image>
 								<!-- #endif -->
 							</template>
-							<image v-else :src="getImg(val.id)" @click.stop="prevImg(v.attachList,index)"></image>
+							<image v-else :src="getImg(val.id)" @click.stop="prevImg(v.attachList,val)"></image>
 						</view>
 						<view class="position_num" v-if="v.attachList.length > 3">
 							+{{v.attachList.length}}
@@ -71,14 +73,14 @@
 		<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
 			<view class="example-body">
 				<view>
-					<view class="user_sidebar">Hello！{{userInfo.user_name}}</view>
+					<view class="user_sidebar">{{userInfo.user_name}}</view>
 					<view class="height60" @click="gotoMessage">
 						<view>消息中心</view>
-						<view>></view>
+						<image class="name_icon" src="@/static/right@2x.png"></image>
 					</view>
 					<view class="height60" @click="gotoMyPublish">
 						<view>我参与的事件</view>
-						<view>></view>
+						<image class="name_icon" src="@/static/right@2x.png"></image>
 					</view>
 				</view>
 				<view class="close">
@@ -104,6 +106,7 @@
 		data() {
 			console.log(uni.getStorageSync('userinfo'))
 			return {
+				appVideoPoster: '/static/htz-image-upload/play.png',
 				title: 'Hello',
 				list: [],
 				pageParams: {
@@ -171,15 +174,20 @@
 					}
 				})
 			},
-			prevImg(item, index) {
+			prevImg(items, val) {
+				console.log(items)
 				let ids = []
-				item.forEach(v => {
+				let index = 0
+				let imgs = items.filter(v => !this.isVideo(v.wjlx))
+				imgs.forEach((v, i) => {
 					ids.push(this.getImg(v.id))
+					if (val.id == v.id) {
+						index = i
+					}
 				})
 				let obj = {
 					current: index,
-					urls: ids,
-					// indicator:'number'
+					urls: ids
 				}
 				console.log(ids)
 				uni.previewImage(obj)
@@ -282,6 +290,10 @@
 		font-size: 18px;
 	}
 
+	.name_icon{
+		width: 18px;
+		height: 18px;
+	}
 	.mes_box image {
 		width: 20px;
 		height: 20px;
@@ -304,7 +316,7 @@
 
 	.event_enter .yj {
 		box-sizing: border-box;
-		width: 47%;
+		width: calc(50% - 6px);
 		height: 82px;
 		background: linear-gradient(316deg, #40D4FF 0%, #0074FE 100%);
 		border-radius: 9px;
@@ -315,7 +327,7 @@
 
 	.event_enter .cg {
 		box-sizing: border-box;
-		width: 47%;
+		width: calc(50% - 6px);
 		height: 82px;
 		background: linear-gradient(314deg, #32EEE2 0%, #00C2E2 100%);
 		border-radius: 9px;
@@ -362,6 +374,7 @@
 		width: 14px;
 		height: 14px;
 		margin-right: 4px;
+		flex-shrink: 0;
 	}
 
 	.img_list {
@@ -530,6 +543,7 @@
 		left: 0;
 		top: 0;
 	}
+
 	.preview-full {
 		position: fixed;
 		top: 0;
@@ -550,8 +564,8 @@
 		position: fixed;
 		right: 32rpx;
 		top: 25rpx;
-		width: 60rpx;
-		height: 60rpx;
+		width: 80rpx;
+		height: 80rpx;
 		line-height: 60rpx;
 		text-align: center;
 		z-index: 1003;
@@ -559,4 +573,6 @@
 		font-size: 65rpx;
 		font-weight: bold;
 	}
+	
+
 </style>

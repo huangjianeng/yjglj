@@ -6,8 +6,8 @@
 					<view class="title">
 						<view class="event_name">{{details.sjmc}}</view>
 						<!-- <view class="point">领导关注</view> -->
-						<view class="level" v-if="details.sjdj == '1'"
-							style="background: url('../../static/A2x.png')">A级
+						<view class="level" v-if="details.sjdj == '1'" style="background: url('../../static/A2x.png')">
+							A级
 						</view>
 						<view class="level" v-else-if="details.sjdj == '2'"
 							style="background: url('../../static/B2x.png')">
@@ -48,14 +48,15 @@
 								<!-- #ifdef APP-PLUS -->
 								<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val.id))">
 								</view>
+								<image mode="widthFix" :src="appVideoPoster" />
 								<!-- #endif -->
 							</template>
-							<image v-else :src="getImg(val.id)" @click.stop="prevImg(attachList,index)"></image>
+							<image v-else :src="getImg(val.id)" @click.stop="prevImg(attachList,val)"></image>
 						</view>
 					</view>
 				</template>
 			</template>
-			<NormalInfo  v-else @prevImg="prevImg" :details="normalInfo"></NormalInfo>
+			<NormalInfo v-else :details="normalInfo"></NormalInfo>
 
 
 
@@ -107,6 +108,7 @@
 		},
 		data() {
 			return {
+				appVideoPoster: '/static/htz-image-upload/play.png',
 				title: 'Hello',
 				list: [],
 				attachList: [],
@@ -121,7 +123,7 @@
 				commentText: '',
 				userInfo: uni.getStorageSync('userinfo'),
 				normalInfo: {},
-				previewVideoSrc:'',
+				previewVideoSrc: '',
 			}
 		},
 		onReachBottom() {
@@ -158,11 +160,16 @@
 				}
 				return isPass
 			},
-			prevImg(item, index) {
-				console.log(item, index)
+			prevImg(items, val) {
+				console.log(items)
 				let ids = []
-				item.forEach(v => {
+				let index = 0
+				let imgs = items.filter(v => !this.isVideo(v.wjlx))
+				imgs.forEach((v, i) => {
 					ids.push(this.getImg(v.id))
+					if (val.id == v.id) {
+						index = i
+					}
 				})
 				let obj = {
 					current: index,
@@ -183,6 +190,11 @@
 					console.log(res)
 					this.commentText = ''
 					this.$refs.popup.close()
+					this.pageParams = {
+						current: 1,
+						size: 10,
+					}
+					this.list = []
 					this.getMsgList()
 				})
 			},
@@ -191,8 +203,9 @@
 					...this.pageParams,
 					sjid: this.id ? this.id : this.normalInfo.objectid,
 				}
+				console.log(params)
 				msgList(params).then(res => {
-					this.list = res.data.records
+					this.list.push(...res.data.records)
 					this.totalPage = res.data.pages
 				})
 			},
@@ -473,7 +486,7 @@
 		color: #9EAEC1;
 
 	}
-	
+
 	.image-upload-Item-video-fixed {
 		position: absolute;
 		top: 0;
@@ -484,7 +497,7 @@
 		border-radius: 10rpx;
 		z-index: 996;
 	}
-	
+
 	.img_wrap video {
 		width: 100%;
 		height: 100%;
@@ -492,6 +505,7 @@
 		left: 0;
 		top: 0;
 	}
+
 	.preview-full {
 		position: fixed;
 		top: 0;
@@ -501,13 +515,13 @@
 		height: 100%;
 		z-index: 1002;
 	}
-	
+
 	.preview-full video {
 		width: 100%;
 		height: 100%;
 		z-index: 1002;
 	}
-	
+
 	.preview-full-close {
 		position: fixed;
 		right: 32rpx;

@@ -258,8 +258,8 @@
 					let params = {
 						eventID: this.eventId,
 						entity,
-						x: this.longitude || 122,
-						y: this.latitude || 23,
+						x: this.longitude,
+						y: this.latitude,
 						user_id: Number(uni.getStorageSync('userinfo').user_id),
 					}
 					addNormalEvent(params).then(res => {

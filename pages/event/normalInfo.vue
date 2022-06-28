@@ -45,6 +45,8 @@
 						<!-- #ifdef APP-PLUS -->
 						<view class="image-upload-Item-video-fixed" @click.stop="previewVideo(getImg(val))">
 						</view>
+						<image mode="widthFix" :src="appVideoPoster">
+						</image>
 						<!-- #endif -->
 					</template>
 					<image v-else :src="getImg(val)" @click.stop="prevImg(details.picIds.split(','),index)"></image>
@@ -79,6 +81,7 @@
 		},
 		data() {
 			return {
+				appVideoPoster:'/static/htz-image-upload/play.png',
 				title: 'Hello',
 				list: [],
 				attachList: [],
