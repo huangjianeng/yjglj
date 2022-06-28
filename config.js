@@ -1,9 +1,9 @@
 export default {
 	token: '',
-	apiUrl: 'http://175.6.177.203:8082',
-	apiUrl2: 'http://175.6.136.216:8092',
-	// apiUrl: '/api',
-	// apiUrl2: '/Api',
+	// apiUrl: 'http://175.6.177.203:8082',
+	// apiUrl2: 'http://175.6.136.216:8092',
+	apiUrl: '/api',
+	apiUrl2: '/Api',
 	ssoName: 'wapoa',
 	ssoKey: '19001345',
 	base: 'http://113.240.253.3:8001',

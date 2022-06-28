@@ -5,8 +5,8 @@
 				<view class="news_item">
 					<view class="title">
 						<view style="display: flex;align-items: center;">
-							<view v-if="details.sjdj == 1" class="sjdj_wrap">进行中</view>
-							<view v-else-if="details.sjdj == 2" class="sjdj_wrap" style="background: #9EAEC1;">预发布</view>
+							<view v-if="details.sjdj == 1" class="sjdj_wrap">预发布</view>
+							<view v-else-if="details.sjdj == 2" class="sjdj_wrap" style="background: #2675FF;">进行中</view>
 							<view v-else-if="details.sjdj == 3" class="sjdj_wrap" style="background: #FF4166;">受阻</view>
 							<view v-else-if="details.sjdj == 4" class="sjdj_wrap" style="background: #FFB302;">暂缓</view>
 							<view class="event_name">{{details.sjmc}}</view>
@@ -547,6 +547,7 @@
 		font-size: 65rpx;
 		font-weight: bold;
 	}
+
 	.level {
 		width: 40px;
 		height: 18px;
@@ -557,12 +558,13 @@
 		font-size: 13;
 		flex-shrink: 0;
 	}
-	.sjdj_wrap{
+
+	.sjdj_wrap {
 		padding: 2px 4px;
 		margin-right: 4px;
 		font-size: 12px;
 		text-align: center;
-		background: #2675FF;
+		background: #9EAEC1;
 		border-radius: 4px;
 		color: white;
 		flex-shrink: 0;

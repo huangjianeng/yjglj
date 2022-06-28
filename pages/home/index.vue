@@ -25,8 +25,8 @@
 				<view class="news_head">应急事件</view>
 				<view class="news_item" @click="gotoDetails(v)" v-for="(v,i) in list" :key="i">
 					<view class="height22" style="justify-content: space-between;height: 24px;">
-						<view v-if="v.sjdj == 1" class="sjdj_wrap">进行中</view>
-						<view v-else-if="v.sjdj == 2" class="sjdj_wrap" style="background: #9EAEC1;">预发布</view>
+						<view v-if="v.sjdj == 1" class="sjdj_wrap">预发布</view>
+						<view v-else-if="v.sjdj == 2" class="sjdj_wrap" style="background: #2675FF;">进行中</view>
 						<view v-else-if="v.sjdj == 3" class="sjdj_wrap" style="background: #FF4166;">受阻</view>
 						<view v-else-if="v.sjdj == 4" class="sjdj_wrap" style="background: #FFB302;">暂缓</view>
 						<view class="event_name">{{v.sjmc}}</view>
@@ -589,7 +589,7 @@
 		line-height: 20px;
 		font-size: 12px;
 		text-align: center;
-		background: #2675FF;
+		background: #9EAEC1;
 		border-radius: 4px;
 		color: white;
 		flex-shrink: 0;
