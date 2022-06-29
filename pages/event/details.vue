@@ -21,7 +21,7 @@
 						<view class="level" v-else-if="details.sjdj == '3'"
 							style="background: url('../../static/C2x.png')">
 							C级</view>
-						<view class="level" v-else style="background: url('../../static/D2x.png')">D级</view>
+						<view class="level" v-else-if="details.sjdj == '4'" style="background: url('../../static/D2x.png')">D级</view>
 					</view>
 					<view class="height22">
 						<image src="@/static/time.png"></image>
