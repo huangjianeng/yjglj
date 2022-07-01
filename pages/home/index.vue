@@ -104,8 +104,10 @@
 
 <script>
 	import config from "@/config.js"
+	// var dayjs = require('dayjs')
 	import {
-		getUrgentEventList
+		getUrgentEventList,
+		uploadSiteApi
 	} from "@/api.js"
 
 	export default {
@@ -120,6 +122,7 @@
 				},
 				totalPage: 99,
 				previewVideoSrc: '',
+				timer: null
 			}
 		},
 		onPullDownRefresh() {
@@ -146,6 +149,7 @@
 		},
 		onLoad() {
 			this.init()
+			this.getSitePolling()
 		},
 		computed: {
 			userInfo: () => {
@@ -153,6 +157,57 @@
 			}
 		},
 		methods: {
+			getTime(date) {
+				var month = date.getMonth() + 1;
+				if (month < 10)
+					month = "0" + month;
+				let day = date.getDate()
+				if (day < 10)
+					day = "0" + day;
+				var hours = date.getHours();
+				if (hours < 10)
+					hours = "0" + hours;
+				var minutes = date.getMinutes();
+				if (minutes < 10)
+					minutes = "0" + minutes;
+				let second = date.getSeconds()
+				if (second < 10)
+					second = "0" + second;
+				var time = date.getFullYear() + "-" + month + "-" + day +
+					" " + hours + ":" + minutes + ":" + second;
+				return time;
+			},
+			getSitePolling() {
+				if (this.timer) {
+					clearInterval(this.timer)
+				}
+				if (uni.getStorageSync('userinfo').user_id) {
+					this.uploadSite()
+					this.timer = setInterval(this.uploadSite, 30 * 1000)
+				}
+			},
+			uploadSite() {
+				console.log('uploadSite')
+				let timestamp = this.getTime(new Date())
+				uni.getLocation({
+					geocode: true,
+					success(res) {
+						console.log('经纬度', res)
+						let {
+							latitude, // 纬度
+							longitude // 经度	
+						} = res
+						let params = {
+							lon: longitude,
+							lat: latitude,
+							timestamp
+						}
+						uploadSiteApi(params).then(result => {
+							console.log('位置', result)
+						})
+					}
+				})
+			},
 			previewVideo(src) {
 				this.previewVideoSrc = src;
 			},
@@ -172,7 +227,7 @@
 					descs: 'bgsj'
 				}
 				getUrgentEventList(params).then(res => {
-					console.log(res)
+					// console.log(res)
 					if (res.code === 200) {
 						this.list.push(...res.data.records)
 						this.totalPage = res.data.pages
@@ -201,6 +256,9 @@
 				uni.removeStorageSync('userinfo')
 				uni.clearStorageSync();
 				this.$refs.showLeft.close()
+				if (this.timer) {
+					clearInterval(this.timer)
+				}
 				uni.navigateTo({
 					url: '/pages/login/index'
 				})

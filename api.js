@@ -168,3 +168,19 @@ export async function systemMsgList(data){
         });
     });
 }
+
+// 上报位置
+export async function uploadSiteApi(data){
+	// console.log(data)
+    return await new Promise((r) => {
+        request({
+            method: "POST",
+            url: `${config.apiUrl}/business/user/location`,
+            data,
+            header: {
+                'Blade-Auth': uni.getStorageSync('userinfo').access_token
+            },
+            success: (res) => r(res.data),
+        });
+    });
+}
