@@ -122,7 +122,8 @@
 				},
 				totalPage: 99,
 				previewVideoSrc: '',
-				timer: null
+				timer: null,
+				userInfo:uni.getStorageSync('userinfo'),
 			}
 		},
 		onPullDownRefresh() {
@@ -152,9 +153,9 @@
 			this.getSitePolling()
 		},
 		computed: {
-			userInfo: () => {
-				return uni.getStorageSync('userinfo')
-			}
+			// userInfo: () => {
+			// 	return uni.getStorageSync('userinfo')
+			// }
 		},
 		methods: {
 			getTime(date) {
@@ -187,7 +188,7 @@
 				}
 			},
 			uploadSite() {
-				console.log('uploadSite')
+				console.log('uploadSite',uni.getStorageSync('userinfo').user_id)
 				let timestamp = this.getTime(new Date())
 				uni.getLocation({
 					geocode: true,
