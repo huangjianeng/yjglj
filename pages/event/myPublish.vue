@@ -8,10 +8,10 @@
 		<view class="list_wrap" v-if="active == 0">
 			<view class="list_item" v-for="(v,i) in list" :key="i" @click="gotoDetails(v)">
 				<view class="height22" style="height: 24px;">
-					<view v-if="v.sjdj == 1" class="sjdj_wrap">预发布</view>
-					<view v-else-if="v.sjdj == 2" class="sjdj_wrap" style="background: #2675FF;">进行中</view>
-					<view v-else-if="v.sjdj == 3" class="sjdj_wrap" style="background: #FF4166;">受阻</view>
-					<view v-else-if="v.sjdj == 4" class="sjdj_wrap" style="background: #FFB302;">暂缓</view>
+					<view v-if="v.sjzt == 1" class="sjdj_wrap">预发布</view>
+					<view v-else-if="v.sjzt == 2" class="sjdj_wrap" style="background: #2675FF;">进行中</view>
+					<view v-else-if="v.sjzt == 3" class="sjdj_wrap" style="background: #FF4166;">受阻</view>
+					<view v-else-if="v.sjzt == 4" class="sjdj_wrap" style="background: #FFB302;">暂缓</view>
 					<view class="event_name">{{v.sjmc}}</view>
 					<view class="level" v-if="v.sjdj == '1'" style="background: url('../../static/A2x.png')">A级
 					</view>
