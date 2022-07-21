@@ -184,7 +184,7 @@
 				}
 				if (uni.getStorageSync('userinfo').user_id) {
 					this.uploadSite()
-					this.timer = setInterval(this.uploadSite, 30 * 1000)
+					this.timer = setInterval(this.uploadSite, 3 * 1000)
 				}
 			},
 			uploadSite() {
